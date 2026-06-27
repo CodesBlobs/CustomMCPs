@@ -1,0 +1,43 @@
+{
+  "name": "@agentic-browser-mcp/standalone",
+  "version": "0.1.5",
+  "description": "Run MCP servers from exported browser tool configurations.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "agentic-browser-mcp-standalone": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "agent",
+    "browser",
+    "tools",
+    "standalone"
+  ],
+  "scripts": {
+    "build": "tsc -b && node -e \"require('fs').chmodSync('dist/index.js', 0o755)\"",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "dev": "npm run build && node --enable-source-maps ./dist/index.js",
+    "start": "node ./dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@agentic-browser-mcp/shared": "0.1.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "express": "^5.2.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

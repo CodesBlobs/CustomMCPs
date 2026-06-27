@@ -1,0 +1,29 @@
+{
+  "name": "agentic-browser-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b && npm --workspace @agentic-browser-mcp/extension run build:bundle && npm --workspace @agentic-browser-mcp/extension run build:assets",
+    "clean": "npm run clean --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "extension:build": "npm --workspace @agentic-browser-mcp/extension run build",
+    "server:dev": "npm --workspace @agentic-browser-mcp/server run dev",
+    "server:start": "npm --workspace @agentic-browser-mcp/server run start",
+    "native-host:install": "npm --workspace @agentic-browser-mcp/server run native-host:install --",
+    "native-host:uninstall": "npm --workspace @agentic-browser-mcp/server run native-host:uninstall",
+    "standalone:dev": "npm --workspace @agentic-browser-mcp/standalone run dev --",
+    "standalone:start": "npm --workspace @agentic-browser-mcp/standalone run start --"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.1",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

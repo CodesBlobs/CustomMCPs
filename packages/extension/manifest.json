@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Agentic Browser MCP",
+  "description": "Reconnectable MV3 bridge client for the local Agentic Browser MCP server.",
+  "version": "0.1.0",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "nativeMessaging",
+    "offscreen",
+    "storage",
+    "tabs",
+    "scripting",
+    "cookies"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "serviceWorker.js",
+    "type": "module"
+  },
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Agentic Browser MCP"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "shoelace/*",
+        "editor.worker.js",
+        "json.worker.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

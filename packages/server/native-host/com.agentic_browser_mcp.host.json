@@ -1,0 +1,9 @@
+{
+  "name": "com.agentic_browser_mcp.host",
+  "description": "Agentic Browser MCP native host — launches the local bridge and proxies HTTP requests.",
+  "path": "/Users/bytedance/sourcecode/wxw/28_mcpsrv_in_extension/packages/server/native-host/run.sh",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://igcilbbnnpmfmadjmjodfbeigiplggnb/"
+  ]
+}

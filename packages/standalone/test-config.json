@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "exportedAt": "2025-01-01T00:00:00.000Z",
+  "servers": [
+    {
+      "id": "test-server-1",
+      "domain": "httpbin.org",
+      "displayName": "HTTPBin Test",
+      "enabled": true,
+      "tools": [
+        {
+          "id": "tool-1",
+          "serverId": "test-server-1",
+          "name": "httpbin_get",
+          "description": "Make a GET request to httpbin.org and see the echoed response",
+          "method": "GET",
+          "urlTemplate": "https://httpbin.org/get",
+          "headerTemplates": {},
+          "bodyTemplate": "",
+          "parameters": [],
+          "responseType": "json",
+          "enabled": true,
+          "createdAt": "2025-01-01T00:00:00.000Z",
+          "updatedAt": "2025-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "tool-2",
+          "serverId": "test-server-1",
+          "name": "httpbin_post",
+          "description": "Make a POST request to httpbin.org with a message body",
+          "method": "POST",
+          "urlTemplate": "https://httpbin.org/post",
+          "headerTemplates": {
+            "Content-Type": "application/json"
+          },
+          "bodyTemplate": "{\"message\": \"{{message}}\"}",
+          "parameters": [
+            {
+              "name": "message",
+              "description": "The message to send",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responseType": "json",
+          "enabled": true,
+          "createdAt": "2025-01-01T00:00:00.000Z",
+          "updatedAt": "2025-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "tool-3",
+          "serverId": "test-server-1",
+          "name": "disabled_tool",
+          "description": "This tool is disabled and should not be registered",
+          "method": "GET",
+          "urlTemplate": "https://httpbin.org/get",
+          "headerTemplates": {},
+          "bodyTemplate": "",
+          "parameters": [],
+          "responseType": "json",
+          "enabled": false,
+          "createdAt": "2025-01-01T00:00:00.000Z",
+          "updatedAt": "2025-01-01T00:00:00.000Z"
+        }
+      ],
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    }
+  ]
+}

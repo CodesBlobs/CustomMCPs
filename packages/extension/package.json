@@ -1,0 +1,26 @@
+{
+  "name": "@agentic-browser-mcp/extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run clean && npm run build:ts && npm run build:bundle && npm run build:assets",
+    "build:assets": "node ./scripts/copy-assets.mjs",
+    "build:bundle": "node ./scripts/bundle-runtime.mjs",
+    "build:ts": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@agentic-browser-mcp/shared": "0.1.1",
+    "@bytecloud/common-lib": "^7.54.2",
+    "@shoelace-style/shoelace": "^2.20.1",
+    "lucide": "^1.18.0",
+    "monaco-editor": "^0.55.1",
+    "vanilla-jsoneditor": "^3.12.0",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.29",
+    "esbuild": "^0.27.0"
+  }
+}

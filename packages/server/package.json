@@ -1,0 +1,31 @@
+{
+  "name": "@agentic-browser-mcp/server",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "agentic-browser-mcp-native-host": "./dist/nativeHost.js",
+    "agentic-browser-mcp-server": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "dev": "npm run build && node --enable-source-maps ./dist/index.js",
+    "start": "node ./dist/index.js",
+    "native-host:install": "node scripts/install-native-host.mjs",
+    "native-host:uninstall": "node scripts/install-native-host.mjs --uninstall"
+  },
+  "dependencies": {
+    "@agentic-browser-mcp/shared": "0.1.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "ws": "^8.21.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1"
+  }
+}

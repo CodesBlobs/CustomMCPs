@@ -1,0 +1,9 @@
+{
+  "name": "com.agentic_browser_mcp.host",
+  "description": "Agentic Browser MCP native host launcher",
+  "path": "__ABSOLUTE_PATH_TO_AGENTIC_BROWSER_MCP_NATIVE_HOST__",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://__EXTENSION_ID__/"
+  ]
+}
