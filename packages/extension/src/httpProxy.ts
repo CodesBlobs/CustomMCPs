@@ -137,8 +137,9 @@ async function sendToBrowserTab(
   headers: Record<string, string>,
   body: string | undefined,
 ): Promise<HttpProxyResult> {
-  // Find a tab on the target domain, falling back to the active tab
   let targetTab: chrome.tabs.Tab | undefined;
+  let openedTabId: number | undefined;
+
   try {
     const targetOrigin = new URL(url).origin;
     const tabs = await chrome.tabs.query({});
@@ -146,7 +147,30 @@ async function sendToBrowserTab(
       if (!tab.url || typeof tab.id !== "number") return false;
       try { return new URL(tab.url).origin === targetOrigin; } catch { return false; }
     });
-  } catch { /* invalid URL — fall through to active tab */ }
+
+    if (!targetTab) {
+      // Open a background tab on the target origin without stealing focus
+      targetTab = await chrome.tabs.create({ url: targetOrigin, active: false });
+      openedTabId = targetTab.id!;
+
+      // Wait for it to finish loading before injecting
+      await new Promise<void>((resolve, reject) => {
+        const tid = setTimeout(() => {
+          chrome.tabs.onUpdated.removeListener(listener);
+          reject(new Error("Background tab timed out"));
+        }, 15_000);
+        const listener = (tabId: number, info: { status?: string }) => {
+          if (tabId !== openedTabId) return;
+          if (info.status === "complete") {
+            clearTimeout(tid);
+            chrome.tabs.onUpdated.removeListener(listener);
+            resolve();
+          }
+        };
+        chrome.tabs.onUpdated.addListener(listener);
+      });
+    }
+  } catch { /* fall through to active tab */ }
 
   if (!targetTab) {
     const [activeTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
