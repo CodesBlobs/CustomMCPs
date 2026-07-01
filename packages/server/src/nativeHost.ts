@@ -234,8 +234,25 @@ async function* readNativeMessages(): AsyncGenerator<unknown> {
   }
 }
 
+const NATIVE_MESSAGE_MAX_BYTES = 1_000_000; // Chrome/Edge hard limit is 1,048,576; stay well under
+
 function writeNativeMessage(message: unknown): void {
-  const body = Buffer.from(JSON.stringify(message), "utf8");
+  let serialized = JSON.stringify(message);
+
+  // If the serialized message is too large, truncate the body field to fit.
+  if (Buffer.byteLength(serialized, "utf8") > NATIVE_MESSAGE_MAX_BYTES) {
+    if (typeof message === "object" && message !== null && "body" in message) {
+      const msg = message as Record<string, unknown>;
+      const overhead = Buffer.byteLength(JSON.stringify({ ...msg, body: "" }), "utf8");
+      const allowedBodyBytes = NATIVE_MESSAGE_MAX_BYTES - overhead - 20; // small safety margin
+      const fullBody = String(msg.body ?? "");
+      // Truncate by bytes, not chars, to avoid splitting multi-byte sequences
+      const truncated = Buffer.from(fullBody, "utf8").subarray(0, allowedBodyBytes).toString("utf8");
+      serialized = JSON.stringify({ ...msg, body: truncated });
+    }
+  }
+
+  const body = Buffer.from(serialized, "utf8");
   const header = Buffer.alloc(NATIVE_MESSAGE_HEADER_BYTES);
   header.writeUInt32LE(body.length, 0);
   process.stdout.write(Buffer.concat([header, body]));
@@ -253,11 +270,72 @@ function getErrorMessage(error: unknown): string {
 
 // ─── HTTP Proxy Handler ───────────────────────────────────────────────────────
 
+// Resolved once and cached per type.
+let resolvedPythonBin: string | null | undefined = undefined;
+let resolvedCurlBin: string | null | undefined = undefined;
+
+async function findPythonBin(): Promise<string | null> {
+  if (resolvedPythonBin !== undefined) return resolvedPythonBin;
+
+  const helperScript = path.join(homedir(), ".agentic-browser-mcp", "curl_request.py");
+  const candidates = [
+    path.join(homedir(), ".agentic-browser-mcp", "venv", "bin", "python3"),
+    "/opt/homebrew/bin/python3",
+    "/usr/local/bin/python3",
+    "/usr/bin/python3",
+    "python3",
+    "python",
+  ];
+
+  for (const bin of candidates) {
+    const ok = await new Promise<boolean>((resolve) => {
+      const child = spawn(bin, ["-c", "import curl_cffi"], { stdio: "ignore" });
+      const tid = setTimeout(() => { child.kill(); resolve(false); }, 3000);
+      child.once("close", (code) => { clearTimeout(tid); resolve(code === 0); });
+      child.once("error", () => { clearTimeout(tid); resolve(false); });
+    });
+    if (ok) {
+      await logToFile(`Using Python + curl_cffi: ${bin} ${helperScript}`);
+      resolvedPythonBin = bin;
+      return bin;
+    }
+  }
+
+  resolvedPythonBin = null;
+  return null;
+}
+
+async function findCurlBin(): Promise<string | null> {
+  if (resolvedCurlBin !== undefined) return resolvedCurlBin;
+
+  const candidates = [
+    "/usr/bin/curl",
+    "/opt/homebrew/bin/curl",
+    "curl",
+  ];
+
+  for (const bin of candidates) {
+    const found = await new Promise<boolean>((resolve) => {
+      const child = spawn(bin, ["--version"], { stdio: "ignore" });
+      const tid = setTimeout(() => { child.kill(); resolve(false); }, 3000);
+      child.once("close", (code) => { clearTimeout(tid); resolve(code === 0); });
+      child.once("error", () => { clearTimeout(tid); resolve(false); });
+    });
+    if (found) {
+      await logToFile(`Using curl binary: ${bin}`);
+      resolvedCurlBin = bin;
+      return bin;
+    }
+  }
+
+  resolvedCurlBin = null;
+  return null;
+}
+
 async function executeHttpRequest(
   request: NativeHostHttpRequest,
 ): Promise<NativeHostHttpResponse> {
   try {
-    // Resolve any __ENV_X__ placeholders in the request
     const url = resolveEnvPlaceholders(request.url, request.envResolve);
     const headers: Record<string, string> = {};
     for (const [key, value] of Object.entries(request.headers)) {
@@ -268,29 +346,22 @@ async function executeHttpRequest(
       ? resolveEnvPlaceholders(request.body, request.envResolve)
       : undefined;
 
-    await logToFile(`Executing HTTP Request: method=${request.method} url=${url} headers=${JSON.stringify(headers)} body=${body || ""}`);
+    await logToFile(`Executing HTTP Request: method=${request.method} url=${url}`);
 
-    const response = await fetch(url, {
-      method: request.method,
-      headers,
-      body,
-      redirect: "follow",
-    });
+    // 1. Try Python + curl_cffi (Chrome TLS impersonation, ARM-native)
+    const pythonBin = await findPythonBin();
+    if (pythonBin) {
+      return await executeHttpRequestViaPython(pythonBin, request.requestId, url, request.method, headers, body);
+    }
 
-    const responseBody = await response.text();
-    const responseHeaders: Record<string, string> = {};
-    response.headers.forEach((value, key) => {
-      responseHeaders[key] = value;
-    });
+    // 2. Try system curl (better TLS than Node.js but not Chrome-identical)
+    const curlBin = await findCurlBin();
+    if (curlBin) {
+      return await executeHttpRequestViaCurl(curlBin, request.requestId, url, request.method, headers, body);
+    }
 
-    return {
-      kind: "native-host/http-response",
-      requestId: request.requestId,
-      status: response.status,
-      statusText: response.statusText,
-      headers: responseHeaders,
-      body: responseBody,
-    };
+    // 3. Fallback: Node.js fetch
+    return await executeHttpRequestViaFetch(request.requestId, url, request.method, headers, body);
   } catch (error) {
     return {
       kind: "native-host/http-response",
@@ -302,6 +373,173 @@ async function executeHttpRequest(
       error: getErrorMessage(error),
     };
   }
+}
+
+async function executeHttpRequestViaPython(
+  pythonBin: string,
+  requestId: string,
+  url: string,
+  method: string,
+  headers: Record<string, string>,
+  body: string | undefined,
+): Promise<NativeHostHttpResponse> {
+  const helperScript = path.join(homedir(), ".agentic-browser-mcp", "curl_request.py");
+  const payload = JSON.stringify({ url, method, headers, body: body ?? null });
+
+  const rawOutput = await new Promise<string>((resolve, reject) => {
+    const child = spawn(pythonBin, [helperScript], { stdio: ["pipe", "pipe", "pipe"] });
+    const chunks: Buffer[] = [];
+    const errChunks: Buffer[] = [];
+
+    child.stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
+    child.stderr.on("data", (chunk: Buffer) => errChunks.push(chunk));
+    child.stdin.write(payload);
+    child.stdin.end();
+
+    child.once("close", (code) => {
+      const out = Buffer.concat(chunks).toString("utf8");
+      if (!out && code !== 0) {
+        reject(new Error(`Python helper exited ${code}: ${Buffer.concat(errChunks).toString("utf8").trim()}`));
+      } else {
+        resolve(out);
+      }
+    });
+    child.once("error", reject);
+  });
+
+  try {
+    const parsed = JSON.parse(rawOutput) as { status: number; statusText: string; headers: Record<string, string>; body: string; error: string | null };
+    if (parsed.error) {
+      return { kind: "native-host/http-response", requestId, status: 0, statusText: "Request Error", headers: {}, body: "", error: parsed.error };
+    }
+    return { kind: "native-host/http-response", requestId, status: parsed.status, statusText: parsed.statusText, headers: parsed.headers, body: parsed.body };
+  } catch {
+    return { kind: "native-host/http-response", requestId, status: 0, statusText: "Parse Error", headers: {}, body: "", error: `Bad JSON from Python helper: ${rawOutput.slice(0, 200)}` };
+  }
+}
+
+async function executeHttpRequestViaCurl(
+  curlBin: string,
+  requestId: string,
+  url: string,
+  method: string,
+  headers: Record<string, string>,
+  body: string | undefined,
+): Promise<NativeHostHttpResponse> {
+  const args: string[] = [
+    "-s",           // silent
+    "-i",           // include response headers in output
+    "--location",   // follow redirects
+    "--compressed", // accept gzip/deflate/br, decompress automatically
+    "-X", method,
+  ];
+
+  for (const [name, value] of Object.entries(headers)) {
+    args.push("-H", `${name}: ${value}`);
+  }
+
+  if (body !== undefined && body !== "") {
+    args.push("--data-raw", body);
+  }
+
+  args.push("--", url);
+
+  const rawOutput = await new Promise<string>((resolve, reject) => {
+    const child = spawn(curlBin, args, { stdio: ["ignore", "pipe", "pipe"] });
+    const chunks: Buffer[] = [];
+    const errChunks: Buffer[] = [];
+
+    child.stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
+    child.stderr.on("data", (chunk: Buffer) => errChunks.push(chunk));
+
+    child.once("close", (code) => {
+      if (code !== 0) {
+        const errText = Buffer.concat(errChunks).toString("utf8").trim();
+        reject(new Error(`curl exited with code ${code}: ${errText}`));
+      } else {
+        resolve(Buffer.concat(chunks).toString("utf8"));
+      }
+    });
+    child.once("error", reject);
+  });
+
+  return parseCurlOutput(requestId, rawOutput);
+}
+
+function parseCurlOutput(requestId: string, raw: string): NativeHostHttpResponse {
+  // curl -i may output multiple HTTP response blocks when following redirects.
+  // Split on blank lines and find the last block that starts with HTTP/.
+  const sections = raw.split(/\r?\n\r?\n/);
+
+  let lastHeaderIdx = -1;
+  for (let i = 0; i < sections.length; i++) {
+    if (/^HTTP\/[\d.]+\s/i.test(sections[i]!.trimStart())) {
+      lastHeaderIdx = i;
+    }
+  }
+
+  if (lastHeaderIdx === -1) {
+    return { kind: "native-host/http-response", requestId, status: 0, statusText: "Parse Error", headers: {}, body: raw, error: "Could not parse curl response headers" };
+  }
+
+  const headerBlock = sections[lastHeaderIdx]!;
+  const bodyParts = sections.slice(lastHeaderIdx + 1);
+  const responseBody = bodyParts.join("\r\n\r\n");
+
+  const lines = headerBlock.split(/\r?\n/);
+  const statusLine = lines[0] ?? "";
+  const statusMatch = statusLine.match(/^HTTP\/[\d.]+ (\d+)(?:\s+(.*))?/);
+  const status = statusMatch ? parseInt(statusMatch[1]!, 10) : 0;
+  const statusText = statusMatch ? (statusMatch[2]?.trim() ?? "") : "";
+
+  const responseHeaders: Record<string, string> = {};
+  for (const line of lines.slice(1)) {
+    const colonIdx = line.indexOf(":");
+    if (colonIdx > 0) {
+      const name = line.slice(0, colonIdx).trim().toLowerCase();
+      const value = line.slice(colonIdx + 1).trim();
+      responseHeaders[name] = value;
+    }
+  }
+
+  return {
+    kind: "native-host/http-response",
+    requestId,
+    status,
+    statusText,
+    headers: responseHeaders,
+    body: responseBody,
+  };
+}
+
+async function executeHttpRequestViaFetch(
+  requestId: string,
+  url: string,
+  method: string,
+  headers: Record<string, string>,
+  body: string | undefined,
+): Promise<NativeHostHttpResponse> {
+  const response = await fetch(url, {
+    method,
+    headers,
+    body,
+    redirect: "follow",
+  });
+
+  const responseBody = await response.text();
+  const responseHeaders: Record<string, string> = {};
+  response.headers.forEach((value, key) => {
+    responseHeaders[key] = value;
+  });
+
+  return {
+    kind: "native-host/http-response",
+    requestId,
+    status: response.status,
+    statusText: response.statusText,
+    headers: responseHeaders,
+    body: responseBody,
+  };
 }
 
 /**

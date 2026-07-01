@@ -39,6 +39,10 @@ export interface McpToolDefinition {
   // Response config
   responseType: "json" | "text" | "html";
 
+  // "browser-tab" runs fetch() inside the active browser tab (bypasses Cloudflare TLS detection)
+  // "browser-navigation" navigates a hidden tab to the URL (passes Cloudflare managed challenges)
+  executionMode?: "native-host" | "browser-tab" | "browser-navigation";
+
   enabled: boolean;
   readonly createdAt: string;
   updatedAt: string;

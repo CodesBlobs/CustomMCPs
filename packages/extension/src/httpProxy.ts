@@ -103,18 +103,21 @@ export async function executeHttpTool(
     }
   }
 
-  // 5. Send to native host via chrome.runtime.connectNative
-  const request: NativeHostHttpRequest = {
-    kind: "native-host/http-request",
-    requestId: crypto.randomUUID(),
-    url,
-    method: tool.method,
-    headers,
-    body,
-    envResolve: Object.keys(context.envVars ?? {}).length > 0 ? context.envVars : undefined,
-  };
+  // 5. Route to browser-tab fetch, browser navigation, or native host
+  const proxyResult = tool.executionMode === "browser-navigation"
+    ? await sendViaBrowserNavigation(url)
+    : tool.executionMode === "native-host"
+    ? await sendToNativeHost({
+        kind: "native-host/http-request",
+        requestId: crypto.randomUUID(),
+        url,
+        method: tool.method,
+        headers,
+        body,
+        envResolve: Object.keys(context.envVars ?? {}).length > 0 ? context.envVars : undefined,
+      })
+    : await sendToBrowserTab(url, tool.method, headers, body);
 
-  const proxyResult = await sendToNativeHost(request);
   return {
     ...proxyResult,
     requestUrl: url,
@@ -122,6 +125,150 @@ export async function executeHttpTool(
     requestHeaders: headers,
     requestBody: body,
   };
+}
+
+/**
+ * Execute an HTTP request inside a browser tab via chrome.scripting.executeScript.
+ * The fetch runs with the tab's origin and Chrome's TLS stack, bypassing bot detection.
+ */
+async function sendToBrowserTab(
+  url: string,
+  method: string,
+  headers: Record<string, string>,
+  body: string | undefined,
+): Promise<HttpProxyResult> {
+  // Find a tab on the target domain, falling back to the active tab
+  let targetTab: chrome.tabs.Tab | undefined;
+  try {
+    const targetOrigin = new URL(url).origin;
+    const tabs = await chrome.tabs.query({});
+    targetTab = tabs.find((tab) => {
+      if (!tab.url || typeof tab.id !== "number") return false;
+      try { return new URL(tab.url).origin === targetOrigin; } catch { return false; }
+    });
+  } catch { /* invalid URL — fall through to active tab */ }
+
+  if (!targetTab) {
+    const [activeTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    targetTab = activeTab;
+  }
+
+  if (!targetTab || typeof targetTab.id !== "number") {
+    return { status: 0, statusText: "No Tab", headers: {}, body: "", error: "No browser tab available for browser-fetch execution." };
+  }
+
+  // Strip Cookie header — the browser supplies cookies automatically via credentials: "include"
+  const safeHeaders: Record<string, string> = {};
+  for (const [k, v] of Object.entries(headers)) {
+    if (k.toLowerCase() !== "cookie") safeHeaders[k] = v;
+  }
+
+  try {
+    const [result] = await chrome.scripting.executeScript({
+      target: { tabId: targetTab.id },
+      func: async (
+        reqUrl: string,
+        reqMethod: string,
+        reqHeaders: Record<string, string>,
+        reqBody: string | null,
+      ): Promise<{ ok: true; status: number; statusText: string; headers: Record<string, string>; body: string } | { ok: false; error: string }> => {
+        try {
+          const init: RequestInit = { method: reqMethod, headers: reqHeaders, credentials: "include" };
+          if (reqBody !== null && reqBody !== "") init.body = reqBody;
+          const response = await fetch(reqUrl, init);
+          const responseBody = await response.text();
+          const responseHeaders: Record<string, string> = {};
+          response.headers.forEach((value: string, name: string) => { responseHeaders[name] = value; });
+          return { ok: true, status: response.status, statusText: response.statusText, headers: responseHeaders, body: responseBody };
+        } catch (error) {
+          return { ok: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      },
+      args: [url, method, safeHeaders, body ?? null],
+    });
+
+    const scriptResult = result?.result;
+    if (!scriptResult) return { status: 0, statusText: "Script Error", headers: {}, body: "", error: "Browser fetch script returned no result." };
+    if (!scriptResult.ok) return { status: 0, statusText: "Fetch Error", headers: {}, body: "", error: scriptResult.error };
+    return { status: scriptResult.status, statusText: scriptResult.statusText, headers: scriptResult.headers, body: scriptResult.body };
+  } catch (error) {
+    return { status: 0, statusText: "Script Error", headers: {}, body: "", error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+/**
+ * Navigate a hidden background tab to the URL and extract the final HTML.
+ * The browser performs a real navigation so Cloudflare managed challenges run
+ * and resolve transparently (including setting cf_clearance), and Sec-Fetch-*
+ * headers are set correctly by the browser.
+ */
+async function sendViaBrowserNavigation(url: string): Promise<HttpProxyResult> {
+  let tabId: number | undefined;
+
+  try {
+    const tab = await chrome.tabs.create({ url: "about:blank", active: false });
+    tabId = tab.id!;
+
+    await new Promise<void>((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        chrome.tabs.onUpdated.removeListener(listener);
+        reject(new Error(`Navigation timed out after ${HTTP_PROXY_TIMEOUT_MS}ms`));
+      }, HTTP_PROXY_TIMEOUT_MS);
+
+      const listener = (
+        updatedTabId: number,
+        info: { status?: string },
+        updatedTab: chrome.tabs.Tab,
+      ) => {
+        if (updatedTabId !== tabId) return;
+        // Wait until fully loaded and the URL has changed away from about:blank
+        if (info.status === "complete" && updatedTab.url && updatedTab.url !== "about:blank") {
+          clearTimeout(timeoutId);
+          chrome.tabs.onUpdated.removeListener(listener);
+          resolve();
+        }
+      };
+
+      chrome.tabs.onUpdated.addListener(listener);
+      chrome.tabs.update(tabId!, { url }).catch((err) => {
+        clearTimeout(timeoutId);
+        chrome.tabs.onUpdated.removeListener(listener);
+        reject(err);
+      });
+    });
+
+    const [result] = await chrome.scripting.executeScript({
+      target: { tabId: tabId! },
+      func: () => ({
+        html: document.documentElement.outerHTML,
+        finalUrl: location.href,
+        title: document.title,
+      }),
+    });
+
+    if (!result?.result) {
+      return { status: 0, statusText: "Script Error", headers: {}, body: "", error: "Failed to extract page content after navigation." };
+    }
+
+    return {
+      status: 200,
+      statusText: "OK",
+      headers: { "content-type": "text/html; charset=utf-8" },
+      body: result.result.html,
+    };
+  } catch (error) {
+    return {
+      status: 0,
+      statusText: "Navigation Error",
+      headers: {},
+      body: "",
+      error: error instanceof Error ? error.message : String(error),
+    };
+  } finally {
+    if (tabId !== undefined) {
+      try { await chrome.tabs.remove(tabId); } catch { /* ignore */ }
+    }
+  }
 }
 
 /**

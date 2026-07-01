@@ -72,10 +72,7 @@ const DOMAIN_MAP = [
 ];
 
 async function fetchJwt(domainId: string): Promise<string> {
-  const { bytecloudAsyncJwtService } = await import("@bytecloud/common-lib");
-  const service = await bytecloudAsyncJwtService.getServiceByDomainID(domainId as any);
-  const jwt = await service.getJwt();
-  return jwt;
+  return "";
 }
 
 function createJwtRow(name: string, domainId: string): HTMLElement {

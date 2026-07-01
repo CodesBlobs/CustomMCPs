@@ -12,10 +12,10 @@
  *   3. Copies the manifest to the Chrome-expected directory for the current OS.
  */
 
-import { chmod, copyFile, mkdir, writeFile } from "node:fs/promises";
+import { chmod, copyFile, mkdir, writeFile, access } from "node:fs/promises";
 import { homedir, platform } from "node:os";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { execSync, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const NATIVE_HOST_NAME = "com.agentic_browser_mcp.host";
@@ -126,10 +126,118 @@ async function install(extensionId) {
   await copyFile(localManifestPath, chromeManifestPath);
   console.log(`Installed manifest: ${chromeManifestPath}`);
 
+  // Step 4: Install Python curl_cffi helper for Cloudflare bypass
+  await installCurlCffiHelper();
+
   console.log("\n✅ Native host installed successfully!");
-  console.log("   Restart Chrome or reload the extension to activate.\n");
+  console.log("   Restart Chrome/Edge or reload the extension to activate.\n");
   console.log("Manifest contents:");
   console.log(JSON.stringify(manifest, null, 2));
+}
+
+const CURL_REQUEST_PY = `#!/usr/bin/env python3
+"""
+HTTP request helper using curl_cffi (Chrome TLS impersonation).
+Reads a JSON request from stdin, writes a JSON response to stdout.
+"""
+import json, sys
+
+def main():
+    try:
+        req = json.load(sys.stdin)
+    except Exception as e:
+        print(json.dumps({"status": 0, "statusText": "Input Error", "headers": {}, "body": "", "error": str(e)}))
+        return
+    try:
+        from curl_cffi import requests as cffi_requests
+        resp = cffi_requests.request(
+            method=req.get("method", "GET"),
+            url=req["url"],
+            headers=req.get("headers", {}),
+            data=req.get("body") or None,
+            impersonate="chrome131",
+            allow_redirects=True,
+            timeout=25,
+        )
+        print(json.dumps({
+            "status": resp.status_code,
+            "statusText": resp.reason or "",
+            "headers": {k.lower(): v for k, v in dict(resp.headers).items()},
+            "body": resp.text,
+            "error": None,
+        }))
+    except Exception as e:
+        print(json.dumps({"status": 0, "statusText": "Request Error", "headers": {}, "body": "", "error": str(e)}))
+
+if __name__ == "__main__":
+    main()
+`;
+
+async function installCurlCffiHelper() {
+  const agentDir = path.join(homedir(), ".agentic-browser-mcp");
+  await mkdir(agentDir, { recursive: true });
+
+  // Always write the latest helper script
+  const helperPath = path.join(agentDir, "curl_request.py");
+  await writeFile(helperPath, CURL_REQUEST_PY, { encoding: "utf8", mode: 0o755 });
+  console.log(`Written helper: ${helperPath}`);
+
+  // Find a usable Python3
+  const pythonCandidates = [
+    "/opt/homebrew/bin/python3",
+    "/usr/local/bin/python3",
+    "/usr/bin/python3",
+    "python3",
+    "python",
+  ];
+
+  let pythonBin = null;
+  for (const candidate of pythonCandidates) {
+    const result = spawnSync(candidate, ["--version"], { encoding: "utf8", stdio: "pipe" });
+    if (result.status === 0) {
+      pythonBin = candidate;
+      break;
+    }
+  }
+
+  if (!pythonBin) {
+    console.warn("\n⚠️  Python 3 not found. Cloudflare bypass will be unavailable.");
+    console.warn("   Install Python 3 and run: pip install curl_cffi\n");
+    return;
+  }
+
+  console.log(`Found Python: ${pythonBin}`);
+
+  // Use a dedicated venv so we never conflict with system/Homebrew managed environments
+  const venvDir = path.join(agentDir, "venv");
+  const venvPython = path.join(venvDir, "bin", "python3");
+
+  // Check if curl_cffi is already available in the venv
+  const venvCheck = spawnSync(venvPython, ["-c", "import curl_cffi"], { encoding: "utf8", stdio: "pipe" });
+  if (venvCheck.status === 0) {
+    console.log("curl_cffi already installed ✓");
+    return;
+  }
+
+  // Create venv if needed
+  const venvCreate = spawnSync(pythonBin, ["-m", "venv", venvDir], { encoding: "utf8", stdio: "inherit" });
+  if (venvCreate.status !== 0) {
+    console.warn("⚠️  Failed to create Python venv. Try manually: pip install curl_cffi");
+    return;
+  }
+
+  // Install curl_cffi into the venv
+  console.log("Installing curl_cffi (Cloudflare bypass)...");
+  const pipInstall = spawnSync(venvPython, ["-m", "pip", "install", "curl_cffi", "--quiet"], {
+    encoding: "utf8",
+    stdio: "inherit",
+  });
+
+  if (pipInstall.status === 0) {
+    console.log("curl_cffi installed ✓");
+  } else {
+    console.warn("⚠️  curl_cffi install failed. Try manually: pip install curl_cffi");
+  }
 }
 
 async function uninstall() {

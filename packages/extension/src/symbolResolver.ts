@@ -222,6 +222,35 @@ export async function resolveTemplate(
     }),
   );
 
+  // When multiple {{cookie:...}} symbols are present, merge and deduplicate them
+  // before substitution so we never split on commas inside cookie values.
+  const cookieResolutions = resolutions.filter((r) => r.symbol.type === "cookie");
+  if (cookieResolutions.length > 1) {
+    const seen = new Set<string>();
+    const merged: string[] = [];
+    for (const { value } of cookieResolutions) {
+      for (const pair of value.split(/;\s*/)) {
+        const trimmed = pair.trim();
+        if (!trimmed) continue;
+        const eqIdx = trimmed.indexOf("=");
+        if (eqIdx === -1) continue;
+        const name = trimmed.slice(0, eqIdx).trim();
+        if (!seen.has(name)) {
+          seen.add(name);
+          merged.push(trimmed);
+        }
+      }
+    }
+    cookieResolutions[0]!.value = merged.join("; ");
+    for (const res of cookieResolutions.slice(1)) {
+      // Expand the symbol's start backward to also consume any separator (`, `) before it
+      let newStart = res.symbol.start;
+      while (newStart > 0 && /[,\s]/.test(template[newStart - 1]!)) newStart--;
+      res.symbol.start = newStart;
+      res.value = "";
+    }
+  }
+
   // Replace symbols in reverse order (to keep indices valid)
   let result = template;
   for (const { symbol, value } of resolutions.reverse()) {
@@ -357,16 +386,17 @@ async function resolveCookieSymbol(args: string[]): Promise<string> {
 
 async function resolveSingleCookie(domain: string, name: string): Promise<string> {
   try {
-    // chrome.cookies.get needs a URL, not just a domain
     const url = domain.includes("://") ? domain : `https://${domain}`;
     const cookie = await chrome.cookies.get({ url, name });
 
-    if (!cookie) {
-      console.warn(`[symbol-resolver] Cookie "${name}" not found for domain "${domain}"`);
-      return "";
-    }
+    if (cookie) return cookie.value;
 
-    return cookie.value;
+    // Partitioned cookies (CHIPS) require partitionKey to be specified
+    const partitioned = await chrome.cookies.getAll({ url, name, partitionKey: {} } as chrome.cookies.GetAllDetails);
+    if (partitioned.length > 0) return partitioned[0]!.value;
+
+    console.warn(`[symbol-resolver] Cookie "${name}" not found for domain "${domain}"`);
+    return "";
   } catch (error) {
     console.warn(`[symbol-resolver] Failed to read cookie "${name}" for "${domain}":`, error);
     return "";
@@ -376,14 +406,22 @@ async function resolveSingleCookie(domain: string, name: string): Promise<string
 async function resolveAllCookies(domain: string): Promise<string> {
   try {
     const url = domain.includes("://") ? domain : `https://${domain}`;
-    const cookies = await chrome.cookies.getAll({ url });
 
-    if (cookies.length === 0) {
+    const [unpartitioned, partitioned] = await Promise.all([
+      chrome.cookies.getAll({ url }),
+      chrome.cookies.getAll({ url, partitionKey: {} } as chrome.cookies.GetAllDetails),
+    ]);
+
+    const unique = [
+      ...new Set([...partitioned, ...unpartitioned].map((c) => `${c.name}=${c.value}`)),
+    ];
+
+    if (unique.length === 0) {
       console.warn(`[symbol-resolver] No cookies found for domain "${domain}"`);
       return "";
     }
 
-    return cookies.map((c) => `${c.name}=${c.value}`).join("; ");
+    return unique.join("; ");
   } catch (error) {
     console.warn(`[symbol-resolver] Failed to read cookies for "${domain}":`, error);
     return "";
@@ -487,25 +525,5 @@ function resolveEnvSymbol(args: string[], context: SymbolResolutionContext): str
 }
 
 async function resolveJwtSymbol(args: string[]): Promise<string> {
-  const [domainName] = args;
-  if (!domainName) {
-    console.warn("[symbol-resolver] jwt symbol missing domain name argument");
-    return "";
-  }
-
-  let domainId = domainName;
-  const upper = domainName.toUpperCase();
-  if (upper === "ROW") domainId = "ttp-row";
-  else if (upper === "EU") domainId = "ttp-eu";
-  else if (upper === "US") domainId = "ttp-us-limited";
-
-  try {
-    const { bytecloudAsyncJwtService } = await import("@bytecloud/common-lib");
-    const service = await bytecloudAsyncJwtService.getServiceByDomainID(domainId as any);
-    const jwt = await service.getJwt();
-    return jwt || "";
-  } catch (error) {
-    console.warn(`[symbol-resolver] Failed to resolve JWT for ${domainName} (${domainId}):`, error);
-    return "";
-  }
+  return "";
 }

@@ -91,6 +91,11 @@ export function mountToolEditor(): HTMLElement {
       h("sl-option", { value: "text" }, "Plain Text"),
       h("sl-option", { value: "html" }, "HTML"),
     );
+    const executionModeSelect = h("sl-select", { id: "f-exec-mode", value: tool?.executionMode ?? "browser-tab" },
+      h("sl-option", { value: "browser-tab" }, "Browser Tab (default)"),
+      h("sl-option", { value: "native-host" }, "Native Host"),
+      h("sl-option", { value: "browser-navigation" }, "Browser Navigation"),
+    );
 
     // Header rows
     const headerRows = h("div", { class: "kv-rows" });
@@ -229,7 +234,7 @@ export function mountToolEditor(): HTMLElement {
       void onSave({
         serverId,
         existing: tool,
-        nameInput, methodSelect, descInput, urlInput, responseSelect,
+        nameInput, methodSelect, descInput, urlInput, responseSelect, executionModeSelect,
         headerRows, paramRows,
         getBody: () => bodyEditor,
         getSchemaText: () => {
@@ -258,6 +263,9 @@ export function mountToolEditor(): HTMLElement {
       field("tg-body", bodyLabel(indentInput, formatBtn), bodyContainer),
       field("tg-params", "Agent Parameters", paramRows, addParamBtn),
       field("tg-response", "Expected Response Format", responseSelect),
+      field("tg-exec-mode", "Request Execution Mode", executionModeSelect,
+        h("p", { class: "muted", style: "font-size:0.8em;margin:2px 0 0" },
+          "Browser Tab runs fetch() inside the active browser tab — use this for Cloudflare-protected sites.")),
     );
 
     const rightCol = h("div", { class: "tool-col tool-col-right" },
@@ -330,6 +338,7 @@ interface SaveCtx {
   descInput: HTMLElement;
   urlInput: HTMLElement;
   responseSelect: HTMLElement;
+  executionModeSelect: HTMLElement;
   headerRows: HTMLElement;
   paramRows: HTMLElement;
   getBody: () => BodyEditor | null;
@@ -375,6 +384,7 @@ async function onSave(ctx: SaveCtx): Promise<void> {
   }
 
   const now = new Date().toISOString();
+  const executionMode = val(ctx.executionModeSelect) as McpToolDefinition["executionMode"];
   const tool: McpToolDefinition = {
     id: ctx.existing?.id ?? crypto.randomUUID(),
     serverId: ctx.serverId,
@@ -386,6 +396,7 @@ async function onSave(ctx: SaveCtx): Promise<void> {
     bodyTemplate: bodyEditor ? bodyEditor.getValue() : "",
     parameters,
     responseType: val(ctx.responseSelect) as McpToolDefinition["responseType"],
+    executionMode: executionMode === "native-host" ? "native-host" : executionMode === "browser-navigation" ? "browser-navigation" : "browser-tab",
     enabled: ctx.existing?.enabled ?? true,
     createdAt: ctx.existing?.createdAt ?? now,
     updatedAt: now,

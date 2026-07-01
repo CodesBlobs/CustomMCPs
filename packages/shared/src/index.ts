@@ -397,6 +397,10 @@ export const McpToolDefinitionSchema = z.object({
   // Response config
   responseType: z.enum(["json", "text", "html"]).default("json"),
 
+  // Execution mode: "native-host" sends requests via the Node.js native host;
+  // "browser-tab" runs fetch() inside a browser tab (bypasses TLS fingerprinting).
+  executionMode: z.enum(["native-host", "browser-tab"]).default("native-host").optional(),
+
   enabled: z.boolean().default(true),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
