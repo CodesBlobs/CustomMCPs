@@ -1,0 +1,590 @@
+{
+  "6bdebfba5813b76c": [
+    "Ebix's broking systems (CBS, eGlobal, WinBEAT) serve insurance brokers across six continents — how would you approach ramping up on a large, established enterprise codebase you didn't write?",
+    "What's an example of a bug or edge case you found because you tested against real-world-style data rather than just the happy path?",
+    "This is a junior, full-time, permanent role — what expectations do you have for mentorship and code review in your first six months?",
+    "Insurance software has strict correctness requirements around premiums and policy data — how do you personally verify your code is correct before raising a PR?"
+  ],
+  "a66398b7c393cc22": [
+    "UpGuard says they process 100 billion risk signals daily — how would you think about designing a system that needs to scale to that volume without falling over?",
+    "They describe blending security ratings, threat intel, and agentic AI — what's your experience integrating AI or LLM components into a production pipeline, if any?",
+    "This is a \"Multiple Levels\" posting — how would you position your own seniority, and why?",
+    "UpGuard just raised a $75M Series C and is scaling fast — how do you personally balance shipping quickly with keeping a growing codebase maintainable?"
+  ],
+  "0fa716fb3eddd32c": [
+    "This role sits in the Test Engineering team working on AWS cloud services for web and mobile — what's your experience with test automation versus manual testing?",
+    "ResMed builds medical/health devices — how would that change how carefully you'd test a feature compared to a typical consumer app?",
+    "What AWS services have you actually used hands-on, even in a personal or university project?",
+    "The listing calls for someone who can think outside the box and learn fast — describe a time you had to pick up an unfamiliar tool or language quickly to get a task done."
+  ],
+  "d6897a17f7f579c3": [
+    "Trust and Safety engineering at TikTok's scale means moderation systems affecting millions of users — how would you approach building a backend service where a bug could mean real content-safety failures?",
+    "What do you know about how large-scale content platforms typically balance automated moderation versus human review?",
+    "This is a backend graduate role — what backend languages or frameworks are you strongest in, and what would you want to learn on the job?",
+    "TikTok operates globally across many legal jurisdictions — how might that complicate designing a single backend system for content safety?"
+  ],
+  "9c648ae7db17f77f": [
+    "NinjaTech's SuperNinja gives each AI agent its own computer with a browser, code editor and terminal — what are the security implications of that much system access, and how would you sandbox it?",
+    "What's your experience building or working with agentic AI systems (tool use, multi-step planning) versus a standard request/response API?",
+    "This is a full-stack role at a pre-Series-A startup — how comfortable are you with ambiguous specs and wearing multiple hats?",
+    "Long-running agents need robust state and error recovery if something crashes mid-task — how would you design for that?"
+  ],
+  "58756275c58d88a5": [
+    "This is a casual pool position with variable, on-call hours — how do you manage continuity of care when you might be on a different ward each shift?",
+    "St George is a principal teaching hospital with a high trauma load — tell me about a time you had to stay calm in a high-acuity or emergency situation.",
+    "What's your approach to quickly getting up to speed on a ward's specific protocols when you're filling a casual shift there for the first time?",
+    "How do you personally stay current with NSW Health's clinical policies and infection-control standards?"
+  ],
+  "dd662ba28032f0e7": [
+    "This role is in aged care rather than acute hospital care — what draws you to working with elderly residents specifically?",
+    "Catholic Healthcare frames it as \"care goes both ways\" — how do you build long-term relationships with residents and their families over time?",
+    "If you're applying via visa sponsorship, what's your understanding of the AHPRA registration and permanent-residency pathway for overseas-trained nurses?",
+    "Aged care often means managing residents with dementia or complex comorbidities — how do you approach care planning as a resident's needs change?"
+  ],
+  "f9955f0ce5b3f448": [
+    "This is a fully telehealth role supporting a GLP-1 weight-management program — what's different about building rapport with a patient over phone or video versus in person?",
+    "Juniper combines medication with behavioural support — how would you handle a patient who's frustrated with progress or wants to stop treatment against clinical advice?",
+    "What's your experience with remote patient triage — deciding when a case needs escalation to a prescriber versus what you can manage yourself?",
+    "This is a casual/locum arrangement — how do you stay clinically sharp and connected to a care team without a physical workplace every day?"
+  ],
+  "f6add7880b3c4d86": [
+    "A Staff Health Service role means your patients are hospital employees, not the public — how does occupational health nursing differ from ward nursing in your mind?",
+    "This role covers travel across multiple SESLHD sites — how do you stay organised managing caseloads across locations?",
+    "What experience do you have with workplace injury management or return-to-work programs?",
+    "How would you handle a confidentiality situation where a staff member's manager asks you for details about their health consultation?"
+  ],
+  "88964eca55d22cee": [
+    "On a remote call, how do you decide whether a patient's symptoms warrant an in-person referral rather than phone support?",
+    "What tools or systems have you used for remote patient documentation and handover?",
+    "Weight-management patients often face stigma — how do you create a judgment-free conversation while still being clinically direct?",
+    "How would you structure a typical outbound check-in call to balance clinical assessment with the personalised, human side of the program?"
+  ],
+  "5c3c38a45cd8486d": [
+    "Whatnot is the largest livestream shopping platform in North America and Europe and is now pushing into Australia as a new market — what's your experience launching or growing a brand somewhere it hasn't operated before?",
+    "Livestream shopping blends entertainment, community and e-commerce — how would you measure marketing success differently here versus a traditional e-commerce funnel?",
+    "This role sits within \"New Markets Marketing\" — how do you prioritise when budgets and playbooks aren't established yet?",
+    "What channels would you lean on first to build awareness of a livestream shopping platform among Australian sellers and collectors?"
+  ],
+  "130d9cc0b2726060": [
+    "This posting title spans \"Assistant/Manager\" — what level of autonomy versus oversight are you expecting, and how would you clarify that in an interview?",
+    "What hands-on experience do you have running digital campaigns end-to-end, from strategy through to reporting?",
+    "For a smaller IT services company, how would you approach marketing a technical/B2B product versus a consumer product?",
+    "What tools — Google Ads, SEO platforms, email marketing — are you most comfortable with day-to-day?"
+  ],
+  "a2184359f93c1f81": [
+    "This is a 12-month contract covering a retail asset, Birkenhead Point — how do you approach ramping up quickly on a role with a fixed end date?",
+    "Retail place-marketing is about driving foot traffic and visitation — what's an activation or partnership you'd consider for a premium shopping destination?",
+    "How do you balance supporting a Marketing Manager, rather than owning strategy yourself, while still bringing your own ideas to the table?",
+    "What metrics would you track to prove a retail campaign actually increased visitation or spend, not just impressions?"
+  ],
+  "b23304c9853fbd82": [
+    "BIG W is a mass-market Australian retail brand — how would your campaign approach differ for a value/family retailer versus a premium brand?",
+    "This role is \"end-to-end execution of integrated campaigns\" — walk me through how you'd manage a campaign across TV, digital and in-store simultaneously.",
+    "What's your experience working within a large retail group's brand guidelines while still pushing creative ideas?",
+    "It's a hybrid WFH role — how do you stay aligned with in-store teams and creative agencies when you're not always in the office?"
+  ],
+  "9598f6fee0af5e5d": [
+    "This is a Finance role embedded within Retail Brand and Marketing — what's your experience partnering finance with a marketing team specifically, e.g. campaign ROI or budget tracking?",
+    "How do you approach financial reporting for a brand-driven cost centre versus a pure sales division?",
+    "How would you build a marketing budget business case that a non-finance stakeholder, like a brand manager, would actually find useful?",
+    "What's your experience with financial modelling or forecasting for campaign spend?"
+  ],
+  "8d2318df42385967": [
+    "Employment Hero is an all-in-one HR/payroll platform selling to SMBs — how would you qualify whether a prospect is a good fit before booking a demo for an Account Executive?",
+    "What's your process for researching a target company before a cold outreach call or email?",
+    "This is a fully remote SDR role — how do you stay motivated and hit activity targets without in-office structure?",
+    "Tell me about a time you turned a \"no\" or objection into a booked meeting."
+  ],
+  "b8b96125481deed7": [
+    "This role sells sponsorship/exhibition space for business events — how is B2B events sales different from selling a software subscription?",
+    "The role advertises a realistic Year 1 OTE of $100-150k on base plus uncapped commission — how do you think about managing your own pipeline to hit a number like that?",
+    "What's your comfort level with full training but no prior sales experience — how do you plan to get up to speed fast?",
+    "Describe your ideal manager or coaching style for someone new to sales."
+  ],
+  "e1157a164436b512": [
+    "This is a remote, contract-based B2B sales role selling marketing services — how do you build trust with a prospect entirely over calls or video without meeting in person?",
+    "How would you diagnose what a prospective business client actually needs versus what they say they want?",
+    "This role is commission-heavy on a contract basis — how do you evaluate whether the commission structure and pipeline being offered is realistic?",
+    "What CRM or outreach tools have you used to manage a B2B sales pipeline?"
+  ],
+  "da5f6f4c9d908861": [
+    "This is face-to-face, door-to-door style sales in affluent Sydney suburbs — how do you handle repeated rejection across a single day and keep your energy up?",
+    "The company says they \"hire on attitude, not experience\" — what about your personality or work ethic makes you a fit for high-volume field sales?",
+    "How would you approach a homeowner who's never heard of the company and is initially wary of a stranger at their door?",
+    "This work is physically demanding, outside all day — how do you sustain performance across a long, active shift?"
+  ],
+  "7f56521883a7cac2": [
+    "This is telesales for solar, battery and heat-pump systems — how would you explain a technical product like solar-plus-battery simply to someone with no technical background?",
+    "The pay structure quoted is $4,000–$6,000 a week, presumably commission-heavy — how do you evaluate whether targets like that are realistic before taking a role?",
+    "What's your approach to staying resilient through a high volume of outbound calls and hang-ups in a single shift?",
+    "Solar sales sometimes gets a reputation for pushy tactics — how would you sell honestly and still hit targets?"
+  ],
+  "234fc14140cba9e2": [
+    "This role is classified \"Computer Manager Grade 2\" within a hospital's Program Management Office — what's your experience managing IT or systems projects specifically in healthcare?",
+    "This is a temporary contract until November 2026 — how do you approach a project knowing there's a fixed end date and a handover ahead?",
+    "St George is a high-trauma teaching hospital — how would that context change your risk assessment for a technology rollout affecting clinical staff?",
+    "What PM methodology are you most comfortable with, and would you adapt it for a public health bureaucracy?"
+  ],
+  "77e605d905993884": [
+    "This role sits in SIRA's Transformation Office — what's your understanding of what SIRA does, and why transformation projects matter there?",
+    "As an \"assistant\" project officer, how do you add value supporting a more senior PM rather than owning the project yourself?",
+    "This role runs to mid-2027 with hybrid work across Sydney CBD or Gosford — how do you manage stakeholder relationships across split locations?",
+    "What experience do you have with government-style project documentation and governance, like steering committees and status reporting?"
+  ],
+  "29ae6e2fd867ab3e": [
+    "The eApproval Program sounds like a digital workflow system for the Ministry of Health — what's your experience with process digitisation or replacing paper-based approval chains?",
+    "This role emphasises collaboration, openness, respect and empowerment — give an example of collaborating across teams with very different priorities.",
+    "It's a temporary role to June 2027 with potential extension — how do you handle uncertainty about job security while staying fully engaged?",
+    "What's your experience gathering requirements from clinical or non-technical stakeholders who may not know exactly what they want from a new system?"
+  ],
+  "d0a363ce55b85579": [
+    "How would you prioritise competing feature requests from different hospital sites that all want their workflow reflected in one shared system?",
+    "What's your experience with change management — getting clinical staff to actually adopt a new digital process instead of reverting to old habits?",
+    "How do you track project risk and escalate issues in a large, multi-site health system rollout?",
+    "What reporting or project-tracking tools have you used, and how do you keep stakeholders updated without over-communicating?"
+  ],
+  "3d9005253a0c379c": [
+    "Linesight is a project and cost management consultancy — what's your exposure to construction project delivery specifically, versus general project management?",
+    "The listing mentions nurturing a strong social dynamic in diverse teams — how do you build rapport quickly with clients and contractors from different backgrounds?",
+    "What experience do you have monitoring project progress and reporting at client meetings?",
+    "How do you handle a situation where a project is falling behind schedule and you need to flag it to a client without damaging the relationship?"
+  ],
+  "76dab1eb2aa675f0": [
+    "Bell Partners works with some of Australia's highest-profile clients — how would you handle being new and unsure about a client's request, without appearing incompetent?",
+    "What accounting software or tools have you used, even in study or internships — Xero, MYOB, or similar?",
+    "The role calls for someone who wants to be \"more than just an ordinary accountant\" — what does that mean to you in practice?",
+    "Describe your approach to double-checking your own work for accuracy before it goes to a manager or client."
+  ],
+  "7faa1d5507b24d44": [
+    "This role involves overhead journal entries, group recharges and balance sheet reconciliations for a construction company — what's your experience with reconciliations specifically?",
+    "Construction finance often involves project-based cost tracking — how comfortable are you allocating costs across multiple concurrent projects?",
+    "What's your process for catching an error in a reconciliation before it's signed off?",
+    "How do you prioritise your workload when month-end close and ad hoc requests from the Finance Manager collide?"
+  ],
+  "d492c373b545283c": [
+    "This role is explicitly a pathway toward completing your CA program — where are you at with your studies, and how do you plan to balance study with full-time work?",
+    "The listing lists \"complete uncomplicated jobs with limited guidance\" as a goal — what's an example of a task you've handled independently with minimal supervision?",
+    "How comfortable are you asking questions when something's unclear, versus guessing and hoping it's right?",
+    "What does \"developing organisation skills\" mean to you in the context of managing timesheets and billings for multiple clients?"
+  ],
+  "a60ffecd479af8cc": [
+    "This is an in-house finance role at a law firm rather than at a practice serving multiple clients — how do you think that changes the day-to-day compared to public practice?",
+    "The role covers bank reconciliations and AP/AR — what's your experience resolving a discrepancy you couldn't immediately explain?",
+    "McCabes emphasises \"innovation with commercial savviness\" — what does being commercially aware mean for someone in a finance support role?",
+    "How do you keep accurate records when you're juggling several different transaction types in a day?"
+  ],
+  "765d05940b217400": [
+    "This role is specifically in superannuation — what do you understand about SMSF compliance and why it matters to clients' financial wellbeing?",
+    "You'd be balancing university study with a casual role — how do you manage your time across both?",
+    "William Buck calls itself a \"Goldilocks\" sized firm — what appeals to you about a mid-size firm versus a Big Four or a small practice?",
+    "What would you do if a client's superannuation paperwork was incomplete and they were unresponsive to follow-ups?"
+  ],
+  "4ad2c237a170ccf3": [
+    "This role designs materials for the InsideOut Institute for Eating Disorders — how would you approach visual communication for a sensitive health topic responsibly?",
+    "What's your process for taking a campaign brief from a Communications Lead and turning it into both digital and print assets?",
+    "This is a casual role at $63.90 an hour — what's your portfolio experience with institutional or university-style branding?",
+    "How do you make sure branded materials stay consistent across social, print and internal comms when multiple stakeholders give feedback?"
+  ],
+  "5ca31e4265e2bdea": [
+    "What's your experience designing for a technology/IT services company versus a consumer brand?",
+    "Walk me through your typical design process from brief to final asset delivery.",
+    "What design software are you most fluent in, and do you have experience with both print and digital formats?",
+    "How do you handle feedback from a non-designer stakeholder that you think would hurt the design?"
+  ],
+  "9912c15ba4864339": [
+    "This role blends design and front-end code — how would you describe your split between visual design skills and hands-on HTML/CSS/JS?",
+    "You'd be delivering both small and large projects for Fortune 500 clients — how do you adjust your workflow between a quick small job and a longer, complex build?",
+    "What's your experience translating a UI design into working front-end code yourself, versus handing it to a developer?",
+    "How do you make sure a design looks and functions consistently across different browsers and screen sizes?"
+  ],
+  "2b7c5c5808352f7f": [
+    "This role covers a diverse portfolio of ecommerce clients — how do you keep multiple clients' brand guidelines straight when producing ad creative for several accounts at once?",
+    "What's your experience designing specifically for performance channels like Facebook and Google Display, where creative needs to convert, not just look good?",
+    "How do you interpret a vague client brief like \"make it pop\" into something you can actually design?",
+    "What does your Photoshop/Adobe workflow look like for producing a batch of ad variations quickly?"
+  ],
+  "028d5d592c30893e": [
+    "This role wants Adobe Creative Suite plus Figma and knowledge of motion graphics — which are you strongest in, and which would you need to grow into?",
+    "As an early-career designer, how do you approach building your portfolio while working on real client branding projects?",
+    "What's an example of a brand identity project you've worked on, even in a student context, and what design decisions did you make?",
+    "How do you take feedback on a design direction you personally liked but the client didn't?"
+  ],
+  "fe90c87e9eb7b949": [
+    "Lendlease works across residential, commercial and infrastructure projects — what types of electrical installations have you got the most hands-on experience with?",
+    "What's your process for testing and certifying an installation for safety and compliance before sign-off?",
+    "The listing mentions installing renewable energy systems like solar and battery storage — what's your experience there, if any?",
+    "Describe a time you diagnosed a tricky electrical fault — how did you narrow down the cause?"
+  ],
+  "3dbbd3fd91ade309": [
+    "What are you currently studying, and how does it connect to Schneider Electric's focus on sustainability and electrification?",
+    "This is a structured internship program — what do you want to get out of it beyond just work experience?",
+    "Schneider talks about Inclusion, Mastery, Purpose, Action, Curiosity and Teamwork as values — which resonates most with how you like to work?",
+    "Tell me about a technical project — uni, personal or work — where you had to learn something completely new."
+  ],
+  "639afb0895ea750b": [
+    "This role is night shift, 10pm to 6:30am, supporting critical transport infrastructure — how do you personally manage staying alert and safe working overnight?",
+    "What's your experience assisting a qualified electrician on live infrastructure sites, and what safety protocols do you follow?",
+    "BGIS calls this \"critical\" infrastructure — what does that tell you about the tolerance for downtime or mistakes on this job?",
+    "How do you handle handover communication between your shift and the day shift team?"
+  ],
+  "0ebfa16ff0ac4227": [
+    "This is a small, family-run business rather than a large contractor — what appeals to you about that kind of team environment?",
+    "Whether you're newly licensed or experienced, what's a job you're proud of completing independently?",
+    "How do you handle a residential customer who's anxious about cost or unhappy with a quote?",
+    "What's your approach to keeping your licence and safety knowledge current?"
+  ],
+  "433ca27cd59a7c00": [
+    "This graduate program combines foundational learning with stretch assignments — how do you like to balance structured learning with being thrown into real work?",
+    "What does \"shaping a more sustainable, digital future\" mean to you in the context of electrical or energy technology?",
+    "What exposure have you had to industrial or building electrical systems so far, even at a basic level?",
+    "Describe a time you had to challenge an established way of doing things, as this program asks graduates to do."
+  ],
+  "db87716b2939205e": [
+    "LVMH operates iconic luxury brands like Benefit Cosmetics — how might supporting HR for a luxury retail workforce differ from a typical corporate office?",
+    "This role spans the entire employee lifecycle plus payroll — what's your experience coordinating both HR admin and payroll processes together?",
+    "It's a fixed-term contract — how do you approach building relationships and trust with a team knowing your tenure is time-limited?",
+    "Give an example of when you had to handle a sensitive employee matter with discretion."
+  ],
+  "7cc71702ff731a93": [
+    "This role sits at the intersection of HR, process and cloud technology — what draws you to HR tech specifically, rather than generalist HR or generalist tech?",
+    "Deloitte graduate programs move across different client projects — how do you handle ramping up quickly on a new client's context and systems?",
+    "What experience do you have with any HCM or payroll platforms, like Workday or SAP SuccessFactors, even from study?",
+    "How do you explain a technical system change to non-technical HR stakeholders who'll actually use it day to day?"
+  ],
+  "02544336731f470a": [
+    "The Office of the Children's Guardian has a child-safety-focused mission — how would that context shape your approach to people leadership and workplace culture?",
+    "This is a temporary role to mid-2027 leading a People & Culture team — how do you build a positive culture on a defined timeline?",
+    "What's your experience managing a small team of HR practitioners rather than being an individual contributor?",
+    "How do you approach a well-being program that genuinely gets adopted by staff, not just exists on paper?"
+  ],
+  "da6456f29fa0f833": [
+    "Healthylife is a digital startup within a larger corporate group — how do you navigate startup agility while still following a big-company parent's policies?",
+    "This is a 12-month fixed-term contract — what would make you confident committing to a role with a defined end date?",
+    "What's your experience advising managers on day-to-day HR issues like performance or conduct?",
+    "How do you keep HR policy advice practical and fast for a fast-moving digital team, rather than slow and bureaucratic?"
+  ],
+  "abe61d21b2e120ce": [
+    "This HRBP role supports both clinical and non-clinical staff at a hospital — how would your approach differ advising a nursing unit manager versus an admin team lead?",
+    "Healthcare HR often deals with rostering, award interpretation and industrial relations — what's your experience with enterprise agreements or complex awards?",
+    "What's an example of when you partnered with a manager to resolve a difficult performance or conduct issue?",
+    "How do you build credibility with clinical staff who might see HR as distant from frontline patient care?"
+  ],
+  "e15fdc307008a3c3": [
+    "This role covers collecting, analysing and interpreting business data to support operational efficiency — what tools do you use to build dashboards or reports, like Excel, Power BI or SQL?",
+    "How do you identify a genuinely actionable trend in a dataset versus noise?",
+    "What's your experience working with large or messy datasets that need cleaning before analysis?",
+    "How would you present a data insight to a non-technical stakeholder who just wants the bottom line?"
+  ],
+  "5539f2fab81c2949": [
+    "This role supports New Balance and other brands at a media agency — how is data analysis for media and advertising different from analysing operational business data?",
+    "This is a newly created role meant to establish and grow the data analytics function — how would you approach building processes from scratch versus following an existing playbook?",
+    "What experience do you have with media metrics like impressions, CPM or attribution specifically?",
+    "How would you handle a senior stakeholder who wants a specific data conclusion that the numbers don't actually support?"
+  ],
+  "19fa9f3eae4440c0": [
+    "This role supports the Credit Risk division within Macquarie's Risk Management Group — what's your understanding of how regulatory requirements shape data and reporting needs in financial risk?",
+    "The team partners with business stakeholders to analyse requirements and deliver data solutions — what's your experience translating a stakeholder's ask into a technical data requirement?",
+    "What's your experience with data architecture, or working alongside a Technology team to design a data solution rather than just consuming existing reports?",
+    "In a 57-year-old, highly regulated financial institution, how do you approach making changes to established data processes carefully?"
+  ],
+  "41e0cc4a6b66da1a": [
+    "This is a financial analysis role within an environmental regulator — how do you see financial analysis supporting a public-good mission versus a purely commercial one?",
+    "What's your experience with cost accounting, forecasting or budget management in a government or public sector context?",
+    "This is a temporary position running until 2028 — how do you approach a multi-year project knowing government funding or priorities can shift?",
+    "How would you explain a budget variance to a non-finance manager who's frustrated their program is over budget?"
+  ],
+  "395ef78735c35784": [
+    "This role sits within Financial Crime Operations doing AML/CTF, KYC and sanctions work — what do you understand about why banks are legally required to do this kind of customer due diligence?",
+    "The team's goal is NPS+30 in three years while also enforcing compliance requirements — how do you balance strict regulatory process with a good customer experience?",
+    "What's your experience documenting decisions and evidence in a way that would hold up if reviewed by a regulator or auditor?",
+    "How would you handle a customer who's frustrated that their KYC or verification request feels invasive or repetitive?"
+  ],
+  "7ebe9b690f0531dc": [
+    "SMEC works on major infrastructure across transport, water and energy — is there a specific discipline you're most drawn to, and why?",
+    "What's a university project or assignment where you applied engineering fundamentals to a real-world-style problem?",
+    "SMEC connects you to a global network of 16,000+ professionals — how do you feel about working within a large multinational versus a small local firm?",
+    "What does \"contributing from day one\" mean to you as an undergraduate joining a professional team?"
+  ],
+  "d8dac82f6c1c610b": [
+    "This 18-month program is open to graduates from any discipline, not just engineering — why do you think NSW Government structures it that way, and how would you make the most of that breadth?",
+    "What does \"making a difference for communities across NSW\" mean to you personally?",
+    "Government graduate programs often involve rotations — how do you adapt quickly when you're moved to a new team or project every few months?",
+    "What's your understanding of how public sector engineering projects differ from private consultancy work in terms of process and accountability?"
+  ],
+  "984e7ab98229ece3": [
+    "This is a renewable-energy-focused internship — what interests you about renewable or clean energy engineering specifically?",
+    "Aurecon says they want students, not just engineers — what non-engineering skills or perspective would you bring to a technical team?",
+    "What would you want to learn or achieve in a 12-week internship to consider it a success?",
+    "Describe a time you worked on a group project with people from different disciplines or backgrounds."
+  ],
+  "1f833a0c3b070ecb": [
+    "This role spans both Traffic Engineering and Asset Engineering — which of those two areas interests you more, and why?",
+    "What's your understanding of asset management concepts like condition assessments and lifecycle planning for council infrastructure?",
+    "Road safety audits are part of this role — what would you look for when assessing whether an intersection or road section is unsafe?",
+    "Local government engineering means working directly with the public and elected councillors — how comfortable are you with that kind of stakeholder exposure?"
+  ],
+  "5a5cfc1899a13d84": [
+    "This role is specifically in the Buildings market with a defence and security focus — what do you know about the extra requirements, like security clearances, that can come with defence-related building projects?",
+    "What civil engineering subjects or projects at university have you found most engaging, and why?",
+    "Mott MacDonald frames its culture around combining a broad range of skills and viewpoints — how do you see yourself contributing a different perspective to a team?",
+    "What's your experience, even academic, with structural design software or civil engineering design tools?"
+  ],
+  "354093303bfc932b": [
+    "IKEA emphasises making a positive impact and inclusion in its culture statement — what does great customer service mean to you at a large retail brand like this?",
+    "This is an inbound role — how do you handle a customer who's frustrated about a delayed or damaged furniture delivery?",
+    "What's your experience balancing multiple customer conversations or queues without dropping quality?",
+    "How would you turn a customer service interaction into an opportunity to support a sale, like a missing part or accessory?"
+  ],
+  "1c04aa0bef3137e0": [
+    "This role sits within a fast-growing beauty ecommerce brand's Digital team — how is supporting online or ecommerce customers different from a phone-based support role?",
+    "Beauty products often involve skin or product-matching questions — how would you handle a customer asking for advice you're not personally qualified to give?",
+    "The company is recognised for continuously going viral — how might sudden spikes in order volume affect customer service demand, and how would you prepare?",
+    "What's your experience with live chat, social DMs, or other digital-first support channels?"
+  ],
+  "652f3e9051f0c13e": [
+    "Validis serves audit firms and financial institutions with a data integration product — how would you approach supporting a technical B2B customer versus a typical consumer?",
+    "What's your comfort level troubleshooting a data or connectivity issue, like a client's accounting software not syncing, rather than a simple order query?",
+    "How do you communicate a technical problem's status to a client without technical jargon they won't understand?",
+    "Validis works with the Big Four and global banks — how would you manage a high-stakes enterprise client differently from a smaller customer?"
+  ],
+  "56d5c7e6a606093b": [
+    "This is a small-business role bridging customer enquiries and a logistics team — how do you handle being the go-between when a delivery issue isn't actually your fault?",
+    "What's your experience with Microsoft Office tools for tracking cases or communications?",
+    "In a small team, you often wear multiple hats — how do you prioritise between answering customers and handling admin or logistics tasks?",
+    "Tell me about a time you handled a customer complaint with limited information or support from a wider team."
+  ],
+  "b7325cd9f4d45a44": [
+    "This role covers roadside-assistance-style inbound calls with shift work from 5am to midnight — how do you handle unusual or early/late shift patterns?",
+    "Roadside assistance calls often come from stressed or stranded customers — how do you de-escalate someone who's anxious or upset on the phone?",
+    "NRMA covers several different services — roadside, EV charging, parks and resorts, ferries — how would you handle a call where you're not immediately sure which product the customer needs?",
+    "What's your experience working in a hybrid contact centre environment, split between office and WFH?"
+  ],
+  "d5469d2dfea807ac": [
+    "Whatnot is scaling live commerce into Australia with a remote, co-located team model — how do you manage operations for a market when your team is distributed across multiple countries?",
+    "What KPIs would you track to know if Australian operations are actually performing well in the first six to twelve months?",
+    "The company says there's no playbook to copy — how do you approach building an operational process from scratch rather than adapting an existing one?",
+    "How do you balance moving fast, a stated company value, with putting in place enough process to avoid operational chaos?"
+  ],
+  "42d7d248e2c680cb": [
+    "This role leads operations for tobacco and vaping licensing, compliance and enforcement — what's your experience managing a team responsible for regulatory enforcement rather than typical service delivery?",
+    "How do you lead centre-wide functions that support multiple different regulatory programs simultaneously?",
+    "This is a temporary role to mid-2027 — how do you approach setting up operational improvements that will outlast your own tenure?",
+    "What's your experience managing operational risk or compliance reporting up to senior stakeholders?"
+  ],
+  "9cdf041168a3b9d4": [
+    "This is a newly created role leading national cash operations — what's your experience managing an operation at a national, multi-site scale?",
+    "Cash-handling operations have unique security and reconciliation requirements — what's your background there, if any?",
+    "The role also covers Projects alongside ongoing operations — how do you balance running business-as-usual while also delivering change initiatives?",
+    "Australia Post frames its purpose around community and service — how would that shape your approach to an operations role that's normally quite back-office?"
+  ],
+  "14ff149252bd629b": [
+    "This role requires understanding of warehouse management, supply chain processes and financial management — which are you strongest in, and which would you need support with?",
+    "FedEx operates at huge scale with tight delivery SLAs — how do you approach making fast decisions under operational pressure, like a delay risking missed deadlines?",
+    "As a Deputy Manager, how do you support a Manager's priorities while still being ready to lead independently when needed?",
+    "What experience do you have with performance metrics and using them to drive a warehouse or operations team's behaviour?"
+  ],
+  "dae7ee59441a96a1": [
+    "This role covers airport stores across two states — how do you maintain consistent brand standards across multiple physical locations you can't be in every day?",
+    "Airport retail has unique customer patterns — time pressure, high-value purchases, international travellers — how does that change store operations versus a typical shopping centre?",
+    "What's your experience developing and coaching store managers or teams rather than working the floor yourself?",
+    "How would you diagnose an underperforming store and decide whether it's a people, process, or location issue?"
+  ],
+  "673e7c0e115e8714": [
+    "Auburn Girls has an academically selective cohort alongside a support unit — how would you differentiate your teaching between high-potential students and students needing additional support, in the same subject?",
+    "What's your experience or approach to teaching Technology and Applied Studies specifically, versus a more theoretical subject?",
+    "How do you keep a technology-based subject engaging and current as tools and curricula change?",
+    "What's your classroom management approach for a hands-on, practical subject with equipment and tools involved?"
+  ],
+  "ac94c0040b153bac": [
+    "This is small-group tutoring in an academic coaching centre, not a mainstream classroom — how does your teaching style adapt for a small group focused on skill-building versus a full class?",
+    "Classes run evenings, weekends and school holidays — how do you keep primary-aged students engaged outside normal school hours when they may be tired?",
+    "What's your experience using structured course materials versus developing your own lesson content?",
+    "How do you communicate a student's progress, or lack of it, to parents who are paying for tutoring and want to see results?"
+  ],
+  "e095414eef132453": [
+    "Verona is a School for Specific Purposes supporting students with complex mental health and behavioural needs — what experience do you have teaching in a specialised or SSP setting?",
+    "How would you adapt a practical Technology and Applied Studies lesson for students who might have behavioural or sensory regulation challenges?",
+    "What's your approach to de-escalating a student in the classroom without disrupting the rest of the group?",
+    "How do you build trust with students who may have had difficult experiences in mainstream schooling?"
+  ],
+  "7bbf06f3b0386d42": [
+    "This role requires commitment to the school's Christian framework, values and ethos — how do you personally approach that as a casual teacher, regardless of your own beliefs?",
+    "Casual or relief teaching means walking into different classrooms with little notice — what's your strategy for establishing authority and routine quickly with a class that doesn't know you?",
+    "What's your approach to classroom management with primary-aged students specifically?",
+    "How comfortable are you using classroom technology on short notice in an unfamiliar room?"
+  ],
+  "0236a414f736bf46": [
+    "A Teacher Librarian role blends teaching and library/resource management — how do you balance those two distinct responsibilities?",
+    "How would you design a library program that actually gets primary students excited about reading, not just borrowing books because they have to?",
+    "What's your experience supporting other teachers' classes with research or information-literacy skills?",
+    "Greenacre is in Sydney's inner south-west with a diverse community — how do you curate a collection and program that reflects your students' backgrounds?"
+  ],
+  "51916b642a60ed45": [
+    "This role is in Mechanical and Building Services — what's your understanding of what a building services mechanical engineer actually designs, like HVAC, fire or plumbing systems?",
+    "What mechanical design software have you used, even at a student level, like AutoCAD or Revit?",
+    "How do you approach checking your own calculations before submitting design work for senior review?",
+    "What appeals to you about working in Buildings specifically versus infrastructure like roads or rail?"
+  ],
+  "22262ae193daff50": [
+    "Koala is a direct-to-consumer furniture brand — how might production engineering for furniture differ from heavy industrial manufacturing?",
+    "What's your experience with manufacturing processes, quality control, or production-line troubleshooting?",
+    "Koala prides itself on doing things differently — how do you approach improving an existing production process without just copying industry-standard practice?",
+    "How would you balance product quality with the cost and speed pressures of a fast-scaling DTC brand?"
+  ],
+  "c67d13619dbb4015": [
+    "James Hardie is a building products manufacturer with a Zero Harm safety culture — how do you personally prioritise safety in an engineering or research environment?",
+    "What's your interest or experience in materials science or product testing, relevant to building materials like fibre cement?",
+    "This is a research-focused graduate role — tell me about a time you designed or ran an experiment or test and had to interpret the results.",
+    "How do you document your engineering work so it's reproducible and useful to colleagues later?"
+  ],
+  "ae63dc50f7bfb0df": [
+    "What mechanical engineering topics are you currently studying that you're most excited to apply in a real consultancy setting?",
+    "This internship gives exposure to technical and advisory work — are you more drawn to hands-on technical design, client-facing advisory work, or both?",
+    "What would make this 12-week internship feel worthwhile to you by the end of it?",
+    "Describe a group assignment where you had to coordinate with people studying something other than engineering."
+  ],
+  "c40d7d2a6e70657c": [
+    "Superloop provides internet infrastructure — fibre, subsea cables, fixed wireless — what's your interest in telco or infrastructure data specifically?",
+    "What's your experience with SQL or data visualisation tools, even from study?",
+    "How would you approach analysing customer churn or usage data for an internet provider?",
+    "What's an example of a dataset you've worked with that taught you something surprising?"
+  ],
+  "47fdf4ea2724e9d0": [
+    "This role supports Macquarie Asset Management's Client Platforms team — what's your experience gathering requirements for client-facing digital products specifically?",
+    "How do you balance improving scalability, efficiency, risk management and user experience when those goals sometimes conflict, like security versus usability?",
+    "What's your approach to documenting a business requirement so both technical and non-technical stakeholders understand it the same way?",
+    "Financial services BA work often involves strict risk and compliance considerations — how would you factor that into a requirements-gathering process?"
+  ],
+  "0903f4d51ecbd4c2": [
+    "This internship focuses on pricing strategy for an ecommerce/tyre retail business — what's your understanding of how data-driven pricing works?",
+    "What's your experience retrieving and analysing data to support a business decision, even in a university project?",
+    "This is a startup environment — how do you handle ambiguity when a task isn't clearly defined?",
+    "How would you present a pricing recommendation to a manager who might disagree with your analysis?"
+  ],
+  "226d6bb044d0d545": [
+    "This role is explicitly mentored by a Senior Business Analyst — what do you want to learn from a mentor relationship like that?",
+    "What's your experience with process mapping or documenting a business workflow, even informally?",
+    "The role touches CRM systems and automation — what's your familiarity with any CRM platforms?",
+    "How do you handle being the go-between for clients and a technical team when their expectations don't match?"
+  ],
+  "cc6d0b4adc8cd4a9": [
+    "LEAP's software is used by 70,000+ lawyers — how do you design for a professional, legal user base that's often not tech-savvy but time-poor?",
+    "What's your process for user research or usability testing when your users are extremely busy professionals?",
+    "How do you balance modernising an established legacy product's UX without disrupting existing users' muscle memory?",
+    "What's an example of a UX decision you made based on user feedback that contradicted your own initial instinct?"
+  ],
+  "bf260123ab1c1f0f": [
+    "This role supports driver safety and user-perception research tied to NHTSA compliance — what's your experience or interest in safety-critical UX research specifically?",
+    "What's the difference, in your understanding, between qualitative and quantitative UX research methods, and when would you use each?",
+    "This is a fixed-term six-month contract — how would you make an impact quickly on a defined research programme?",
+    "How do you ensure research findings actually translate into design or product decisions, rather than sitting in a report?"
+  ],
+  "9baca9d531896690": [
+    "You'd be collaborating directly with engineers and QA — how do you make sure a design handoff doesn't lose fidelity once it's built?",
+    "What's your experience with Sketch or Figma specifically, and do you have a preference between them?",
+    "Describe a time you had to solve a genuinely difficult UX problem — what made it hard, and how did you resolve it?",
+    "How do you communicate a design rationale to stakeholders who aren't designers?"
+  ],
+  "76a967b145ba4de1": [
+    "This role reports to the Head of Innovation and works closely with the UX team — how do you see \"design technologist\" differing from a pure UX designer or pure developer role?",
+    "Harvey Norman is a well-established retail brand moving deeper into digital — what's your experience balancing a legacy brand's expectations with modern digital UX practice?",
+    "What's your comfort level prototyping in code, like HTML/CSS/JS, versus purely in design tools?",
+    "How would you pitch a new digital idea to a Head of Innovation and get buy-in?"
+  ],
+  "820732087f279e84": [
+    "Corto is scaling from 80 to 150+ employees while building AI tools for legal professionals — how do you handle designing for a product and user base that's evolving quickly?",
+    "What's your understanding of designing AI-powered workflows, like showing AI-generated suggestions, versus a standard static interface?",
+    "How do you keep design consistency as a company scales fast and multiple people start touching the product?",
+    "What's a UX challenge specific to legal software — dense information, compliance, accuracy expectations — that you'd want to solve well?"
+  ],
+  "3125d6bdd52d3ff0": [
+    "This role covers forklifts and spare parts specifically — what's your experience with inventory accuracy for parts versus general stock?",
+    "You'd be leading a small team while also operating a forklift yourself — how do you balance hands-on work with supervising others?",
+    "What's your approach to maintaining safety standards in a warehouse with heavy equipment moving around constantly?",
+    "How would you handle discovering a discrepancy between recorded and physical stock counts?"
+  ],
+  "52dda9f80683a6b6": [
+    "JD Sports has grown to 60+ stores across Australia and New Zealand — how does supervising a warehouse supporting rapid retail expansion differ from a stable, mature operation?",
+    "This is specifically an AM shift role — how do you set your team up for a strong start to the day?",
+    "Fashion and footwear retail often has seasonal demand spikes — how would you prepare a warehouse team for a peak period?",
+    "What's your experience with warehouse management systems or stock-processing software?"
+  ],
+  "a372b0d0c237ffc7": [
+    "This role is within a not-for-profit's container deposit scheme operation — how does supervising a warehouse in a charity or social-purpose context differ from a purely commercial one?",
+    "Return and Earn involves handling high volumes of recyclable containers — what's your experience with high-throughput, repetitive process environments?",
+    "St Vincent de Paul emphasises building a more just and compassionate society — how would that shape how you manage and support your team day-to-day?",
+    "How do you maintain quality and safety standards in a high-volume sorting or processing operation?"
+  ],
+  "be68a5452b39d52a": [
+    "Cleanaway is a waste management company — what's your experience or comfort level supervising operations in an industrial or waste-handling environment?",
+    "Given very limited detail in this listing, what questions would you want answered about day-to-day responsibilities before accepting an offer?",
+    "What's your general approach to supervising a frontline operational team, regardless of industry?",
+    "How do you handle safety compliance in an operation with heavy vehicles and waste-handling risks?"
+  ],
+  "0ff173316407d51a": [
+    "SKUtopia uses robotic fulfilment technology — what's your comfort level working alongside automation and robotics rather than a fully manual warehouse?",
+    "This role involves fluctuating temperatures, 25–35°C, and physical activity all shift — how do you personally manage stamina through a demanding physical shift?",
+    "What's your experience with pick-and-pack or inventory-receiving processes?",
+    "How would you flag a safety or equipment issue with the robotics system to your team lead?"
+  ],
+  "9c8eec9f75ee3bed": [
+    "This role supports Mirvac's property development legal work, reporting up through Senior Legal Counsel — what's your experience with property or development legal matters, like contracts, planning, or disputes?",
+    "How do you manage supporting senior counsel on complex matters while still building your own judgment and autonomy?",
+    "Property development involves many stakeholders — councils, contractors, JV partners — how do you manage competing legal interests across a project?",
+    "What's an example of a legal risk you identified early that saved a project time or money later?"
+  ],
+  "3685c7b639111416": [
+    "Egis operates across architecture, engineering and infrastructure delivery globally — what's your experience with construction or infrastructure contracts specifically?",
+    "This is a mid-senior, permanent position — what's your approach to advising engineering teams who aren't lawyers on legal or contractual risk?",
+    "With 22,000+ employees across many countries, how do you handle giving legal advice that needs to consider multiple jurisdictions or local law nuances?",
+    "Describe a time you had to flag a serious risk to a business stakeholder who wanted to proceed anyway."
+  ],
+  "767936ff27809de7": [
+    "This is a leadership role managing a team of legal professionals and grant managers at a government Independent Review Office — what's your experience managing other lawyers or legal staff, not just practising law yourself?",
+    "What's your understanding of an Independent Review Office's role in ensuring fairness in government decision-making?",
+    "How do you balance strategic leadership responsibilities with staying close enough to case work to guide your team effectively?",
+    "This role manages grant processes too — what's your experience with grants administration or funding decisions, if any?"
+  ],
+  "4bbec2fdef8c3943": [
+    "The Ombudsman's role is pursuing fairness for the people of NSW — what draws you to public-interest legal work over private practice or corporate counsel?",
+    "What's your experience with administrative law or investigating complaints against government agencies?",
+    "How do you approach writing a legal opinion or finding that needs to be clear to non-lawyers, like members of the public?",
+    "How would you handle a case where you believe a government agency acted unfairly, but not necessarily illegally?"
+  ],
+  "3332418ba8cc4c93": [
+    "Legora builds an AI-native workspace for lawyers — how comfortable are you personally with AI tools changing how legal work gets done, versus viewing it as a threat to traditional practice?",
+    "This is an in-house commercial counsel role at a fast-scaling startup — what's your experience with SaaS commercial contracts, like customer MSAs or data and privacy terms?",
+    "Legora serves elite law firms as customers — how would you handle drafting contracts for such sophisticated legal counterparties?",
+    "How do you prioritise legal work at a startup moving faster than a typical legal review cycle would allow?"
+  ],
+  "767b2c83a41d3bb4": [
+    "Cooking for aged care residents often means managing texture-modified diets and specific dietary needs — what's your experience with that kind of catering?",
+    "Opal's values centre on Compassion, Accountability, Respect and Excellence — how does that show up in how you'd run a kitchen, not just cook food?",
+    "As a Demi Chef supporting kitchen leadership, how do you balance following direction with bringing your own ideas to a menu?",
+    "How do you create incredible dining experiences for residents within the budget and dietary constraints of aged care catering?"
+  ],
+  "cd2f59ac6b838cc4": [
+    "This role is explicitly built around visa sponsorship to permanent residency — what's your current visa status and understanding of the pathway?",
+    "Depending on which level — Chef de Partie, Sous, or Head Chef — you're applying for, how would you describe your current seniority and section experience?",
+    "What sections, like grill, pastry or sauce, are you strongest in, and which would you want more experience in?",
+    "How do you handle the pressure of a full-service kitchen during a busy dinner rush?"
+  ],
+  "de2380c14c4d3b03": [
+    "This role cooks for students in an education catering context — how does menu planning differ when your focus is engaging, nutritious meals for students specifically?",
+    "What's your experience with bulk cooking and managing stock and wastage at scale?",
+    "How would you approach a student with specific dietary requirements or allergies safely?",
+    "This role is pitched as good work-life balance for a chef — what does sustainable pacing in a kitchen career mean to you?"
+  ],
+  "5262ae91748c258a": [
+    "Bertas describes itself as fast-paced and high-volume — how do you stay consistent on quality when you're under constant time pressure?",
+    "What sections — grill, fryer, prep — are you most comfortable running during a busy service?",
+    "In a small, tight-knit team, how do you handle a colleague who's not pulling their weight during a rush?",
+    "How do you personally stay calm and communicate clearly with the team when service gets slammed?"
+  ],
+  "052042dfa3937d4e": [
+    "Solotel runs a portfolio of well-known Sydney pubs and restaurants — what interests you about working within a larger hospitality group versus a single independent venue?",
+    "Pub kitchens often need to turn around high volumes at a consistent standard — what's your experience with that pace and quality balance?",
+    "What's a dish or menu item you're proud of creating or refining?",
+    "How would you handle being asked to work across multiple venues in the Solotel portfolio, if needed?"
+  ]
+}
