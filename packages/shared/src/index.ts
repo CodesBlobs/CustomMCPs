@@ -155,12 +155,28 @@ export const NativeHostHttpResponseSchema = z.object({
   error: z.string().optional(),
 });
 
+export const NativeHostParseRequestSchema = z.object({
+  kind: z.literal("native-host/parse-request"),
+  requestId: z.string().min(1),
+  scriptPath: z.string().min(1),
+  input: z.string(),
+});
+
+export const NativeHostParseResponseSchema = z.object({
+  kind: z.literal("native-host/parse-response"),
+  requestId: z.string().min(1),
+  output: z.string(),
+  error: z.string().optional(),
+});
+
 export const NativeHostMessageSchema = z.union([
   NativeHostEnsureServerRequestSchema,
   NativeHostReadyResponseSchema,
   NativeHostErrorResponseSchema,
   NativeHostHttpRequestSchema,
   NativeHostHttpResponseSchema,
+  NativeHostParseRequestSchema,
+  NativeHostParseResponseSchema,
 ]);
 
 export type NativeHostEnsureServerRequest = z.infer<typeof NativeHostEnsureServerRequestSchema>;
@@ -168,6 +184,8 @@ export type NativeHostReadyResponse = z.infer<typeof NativeHostReadyResponseSche
 export type NativeHostErrorResponse = z.infer<typeof NativeHostErrorResponseSchema>;
 export type NativeHostHttpRequest = z.infer<typeof NativeHostHttpRequestSchema>;
 export type NativeHostHttpResponse = z.infer<typeof NativeHostHttpResponseSchema>;
+export type NativeHostParseRequest = z.infer<typeof NativeHostParseRequestSchema>;
+export type NativeHostParseResponse = z.infer<typeof NativeHostParseResponseSchema>;
 export type NativeHostMessage = z.infer<typeof NativeHostMessageSchema>;
 
 export const ClientHelloMessageSchema = z.object({
@@ -405,6 +423,10 @@ export const McpToolDefinitionSchema = z.object({
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
   inputSchema: z.string().optional(),
+
+  // Local path to a script (e.g. a Python file) that turns this tool's raw
+  // response body into CSV. Run on demand from the Test dialog.
+  parserScriptPath: z.string().optional(),
 });
 
 export type McpToolDefinition = z.infer<typeof McpToolDefinitionSchema>;

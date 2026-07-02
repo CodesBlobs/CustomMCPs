@@ -8,14 +8,22 @@
 import {
   NATIVE_HOST_NAME,
   NativeHostHttpResponseSchema,
+  NativeHostParseResponseSchema,
   type NativeHostHttpRequest,
   type NativeHostHttpResponse,
+  type NativeHostParseRequest,
 } from "@agentic-browser-mcp/shared";
 
 import type { McpToolDefinition } from "./mcpToolStorage.js";
 import { resolveTemplate, extractAllParameterNames, type SymbolResolutionContext } from "./symbolResolver.js";
 
 const HTTP_PROXY_TIMEOUT_MS = 30_000;
+const PARSE_PROXY_TIMEOUT_MS = 35_000;
+
+export interface ParserResult {
+  readonly output: string;
+  readonly error?: string;
+}
 
 export interface HttpProxyResult {
   readonly status: number;
@@ -395,6 +403,82 @@ async function sendToNativeHost(request: NativeHostHttpRequest): Promise<HttpPro
           error: error instanceof Error ? error.message : String(error),
         });
       });
+      return;
+    }
+
+    port.onMessage.addListener(handleMessage);
+    port.onDisconnect.addListener(handleDisconnect);
+    port.postMessage(request);
+  });
+}
+
+/**
+ * Run a local script (e.g. a Python file) through the native host, feeding it
+ * `input` (a tool's raw response body) on stdin and capturing stdout as the result.
+ */
+export async function runParserScript(scriptPath: string, input: string): Promise<ParserResult> {
+  const request: NativeHostParseRequest = {
+    kind: "native-host/parse-request",
+    requestId: crypto.randomUUID(),
+    scriptPath,
+    input,
+  };
+
+  return await new Promise<ParserResult>((resolve) => {
+    let settled = false;
+    let port: chrome.runtime.Port | undefined;
+
+    const finish = (result: ParserResult): void => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+
+      if (port) {
+        port.onMessage.removeListener(handleMessage);
+        port.onDisconnect.removeListener(handleDisconnect);
+        try {
+          port.disconnect();
+        } catch {
+          // Ignore disconnect errors
+        }
+      }
+
+      resolve(result);
+    };
+
+    const handleMessage = (message: unknown): void => {
+      const parsed = NativeHostParseResponseSchema.safeParse(message);
+      if (parsed.success && parsed.data.requestId === request.requestId) {
+        finish({ output: parsed.data.output, error: parsed.data.error });
+        return;
+      }
+
+      if (
+        typeof message === "object" &&
+        message !== null &&
+        "kind" in message &&
+        (message as { kind: string }).kind === "native-host/error"
+      ) {
+        const errorMessage =
+          "message" in message ? String((message as { message: unknown }).message) : "Native host error";
+        finish({ output: "", error: errorMessage });
+        return;
+      }
+    };
+
+    const handleDisconnect = (): void => {
+      const message = chrome.runtime.lastError?.message ?? "Native host disconnected.";
+      finish({ output: "", error: message });
+    };
+
+    const timeoutId = setTimeout(() => {
+      finish({ output: "", error: `Parser script timed out after ${PARSE_PROXY_TIMEOUT_MS}ms` });
+    }, PARSE_PROXY_TIMEOUT_MS);
+
+    try {
+      port = chrome.runtime.connectNative(NATIVE_HOST_NAME);
+    } catch (error) {
+      finish({ output: "", error: error instanceof Error ? error.message : String(error) });
       return;
     }
 

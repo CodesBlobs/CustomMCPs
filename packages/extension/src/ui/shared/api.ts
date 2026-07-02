@@ -78,6 +78,20 @@ export async function getNativeHostStatus(): Promise<NativeHostStatus> {
   return await send<NativeHostStatus>({ kind: "mcp/get-native-host-status" });
 }
 
+export async function parseToolOutput(
+  serverId: string,
+  toolId: string,
+  input: string,
+): Promise<{ output: string; error?: string }> {
+  const res = await send<{ output: string; error?: string }>({
+    kind: "mcp/parse-tool-output",
+    serverId,
+    toolId,
+    input,
+  });
+  return { output: res.output, error: res.error };
+}
+
 // ─── Bridge / pairing ───────────────────────────────────────────────────────
 
 export async function getPairingState(): Promise<PairingState | undefined> {

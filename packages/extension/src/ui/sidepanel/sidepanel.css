@@ -704,6 +704,29 @@ sl-button.icon-button.danger:focus-visible::part(base) {
   height: 100%;
   min-height: 0;
   gap: 10px;
+  overflow-y: auto;
+}
+
+.parser-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--sl-color-neutral-200);
+}
+
+.parser-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-family: var(--sl-font-mono);
+}
+
+.parser-output .result-pre {
+  flex: none;
+  max-height: 260px !important;
 }
 
 .status-banner {

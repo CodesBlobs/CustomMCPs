@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
-import { readFile, appendFile, mkdir } from "node:fs/promises";
+import { constants as fsConstants } from "node:fs";
+import { access, readFile, appendFile, mkdir } from "node:fs/promises";
 import net from "node:net";
 import { homedir } from "node:os";
 import path from "node:path";
@@ -10,9 +11,12 @@ import { fileURLToPath } from "node:url";
 import {
   NativeHostEnsureServerRequestSchema,
   NativeHostHttpRequestSchema,
+  NativeHostParseRequestSchema,
   PairingFileSchema,
   type NativeHostHttpRequest,
   type NativeHostHttpResponse,
+  type NativeHostParseRequest,
+  type NativeHostParseResponse,
   type NativeHostReadyResponse,
   type PairingFile,
 } from "@agentic-browser-mcp/shared";
@@ -23,6 +27,7 @@ const BRIDGE_STARTUP_TIMEOUT_MS = 10_000;
 const NATIVE_MESSAGE_HEADER_BYTES = 4;
 const PAIRING_RETRY_DELAY_MS = 200;
 const SOCKET_PROBE_TIMEOUT_MS = 1500;
+const PARSE_SCRIPT_TIMEOUT_MS = 30_000;
 
 const LOG_FILE_PATH =
   process.env.AGENTIC_BROWSER_MCP_NATIVE_HOST_LOG?.trim() ||
@@ -88,6 +93,15 @@ async function main(): Promise<void> {
       if (httpRequest.success) {
         await logToFile(`[native-host/http-request] Payload: ${JSON.stringify(httpRequest.data)}`);
         const response = await executeHttpRequest(httpRequest.data);
+        writeNativeMessage(response);
+        continue;
+      }
+
+      // Handle "run local parser script" requests
+      const parseRequest = NativeHostParseRequestSchema.safeParse(message);
+      if (parseRequest.success) {
+        await logToFile(`[native-host/parse-request] scriptPath=${parseRequest.data.scriptPath}`);
+        const response = await executeParseRequest(parseRequest.data);
         writeNativeMessage(response);
         continue;
       }
@@ -540,6 +554,96 @@ async function executeHttpRequestViaFetch(
     headers: responseHeaders,
     body: responseBody,
   };
+}
+
+// ─── Parser Script Handler ─────────────────────────────────────────────────────
+
+// Resolved once and cached: a plain python3/python interpreter, no curl_cffi requirement.
+let resolvedGenericPythonBin: string | null | undefined = undefined;
+
+async function findGenericPythonBin(): Promise<string | null> {
+  if (resolvedGenericPythonBin !== undefined) return resolvedGenericPythonBin;
+
+  const candidates = [
+    path.join(homedir(), ".agentic-browser-mcp", "venv", "bin", "python3"),
+    "/opt/homebrew/bin/python3",
+    "/usr/local/bin/python3",
+    "/usr/bin/python3",
+    "python3",
+    "python",
+  ];
+
+  for (const bin of candidates) {
+    const ok = await new Promise<boolean>((resolve) => {
+      const child = spawn(bin, ["--version"], { stdio: "ignore" });
+      const tid = setTimeout(() => { child.kill(); resolve(false); }, 3000);
+      child.once("close", (code) => { clearTimeout(tid); resolve(code === 0); });
+      child.once("error", () => { clearTimeout(tid); resolve(false); });
+    });
+    if (ok) {
+      resolvedGenericPythonBin = bin;
+      return bin;
+    }
+  }
+
+  resolvedGenericPythonBin = null;
+  return null;
+}
+
+async function executeParseRequest(request: NativeHostParseRequest): Promise<NativeHostParseResponse> {
+  const { requestId, scriptPath, input } = request;
+
+  try {
+    await access(scriptPath, fsConstants.R_OK);
+  } catch {
+    return { kind: "native-host/parse-response", requestId, output: "", error: `Parser script not found or not readable: ${scriptPath}` };
+  }
+
+  const pythonBin = await findGenericPythonBin();
+  if (!pythonBin) {
+    return { kind: "native-host/parse-response", requestId, output: "", error: "No Python interpreter found on this machine." };
+  }
+
+  await logToFile(`Running parser script: ${pythonBin} ${scriptPath}`);
+
+  try {
+    const { stdout, stderr, exitCode } = await new Promise<{ stdout: string; stderr: string; exitCode: number | null }>((resolve, reject) => {
+      const child = spawn(pythonBin, [scriptPath], { stdio: ["pipe", "pipe", "pipe"] });
+      const outChunks: Buffer[] = [];
+      const errChunks: Buffer[] = [];
+
+      const tid = setTimeout(() => {
+        child.kill();
+        reject(new Error(`Parser script timed out after ${PARSE_SCRIPT_TIMEOUT_MS}ms`));
+      }, PARSE_SCRIPT_TIMEOUT_MS);
+
+      child.stdout.on("data", (chunk: Buffer) => outChunks.push(chunk));
+      child.stderr.on("data", (chunk: Buffer) => errChunks.push(chunk));
+      child.stdin.write(input);
+      child.stdin.end();
+
+      child.once("close", (code) => {
+        clearTimeout(tid);
+        resolve({
+          stdout: Buffer.concat(outChunks).toString("utf8"),
+          stderr: Buffer.concat(errChunks).toString("utf8"),
+          exitCode: code,
+        });
+      });
+      child.once("error", (err) => {
+        clearTimeout(tid);
+        reject(err);
+      });
+    });
+
+    if (exitCode !== 0) {
+      return { kind: "native-host/parse-response", requestId, output: stdout, error: stderr.trim() || `Parser script exited with code ${exitCode}` };
+    }
+
+    return { kind: "native-host/parse-response", requestId, output: stdout };
+  } catch (error) {
+    return { kind: "native-host/parse-response", requestId, output: "", error: getErrorMessage(error) };
+  }
 }
 
 /**

@@ -96,6 +96,12 @@ export function mountToolEditor(): HTMLElement {
       h("sl-option", { value: "native-host" }, "Native Host"),
       h("sl-option", { value: "browser-navigation" }, "Browser Navigation"),
     );
+    const parserScriptInput = h("sl-input", {
+      id: "f-parser-script",
+      class: "code",
+      placeholder: "/path/to/parse_script.py",
+      value: tool?.parserScriptPath ?? "",
+    });
 
     // Header rows
     const headerRows = h("div", { class: "kv-rows" });
@@ -234,7 +240,7 @@ export function mountToolEditor(): HTMLElement {
       void onSave({
         serverId,
         existing: tool,
-        nameInput, methodSelect, descInput, urlInput, responseSelect, executionModeSelect,
+        nameInput, methodSelect, descInput, urlInput, responseSelect, executionModeSelect, parserScriptInput,
         headerRows, paramRows,
         getBody: () => bodyEditor,
         getSchemaText: () => {
@@ -266,6 +272,9 @@ export function mountToolEditor(): HTMLElement {
       field("tg-exec-mode", "Request Execution Mode", executionModeSelect,
         h("p", { class: "muted", style: "font-size:0.8em;margin:2px 0 0" },
           "Browser Tab runs fetch() inside the active browser tab — use this for Cloudflare-protected sites.")),
+      field("tg-parser-script", "Parser Script Path (optional)", parserScriptInput,
+        h("p", { class: "muted", style: "font-size:0.8em;margin:2px 0 0" },
+          "Local script (e.g. a Python file) run by the native host from the Test dialog. It receives the tool's raw response body on stdin and should print CSV on stdout.")),
     );
 
     const rightCol = h("div", { class: "tool-col tool-col-right" },
@@ -339,6 +348,7 @@ interface SaveCtx {
   urlInput: HTMLElement;
   responseSelect: HTMLElement;
   executionModeSelect: HTMLElement;
+  parserScriptInput: HTMLElement;
   headerRows: HTMLElement;
   paramRows: HTMLElement;
   getBody: () => BodyEditor | null;
@@ -401,6 +411,7 @@ async function onSave(ctx: SaveCtx): Promise<void> {
     createdAt: ctx.existing?.createdAt ?? now,
     updatedAt: now,
     inputSchema,
+    parserScriptPath: val(ctx.parserScriptInput).trim() || undefined,
   };
 
   const ok = await store.getState().saveTool(ctx.serverId, tool);

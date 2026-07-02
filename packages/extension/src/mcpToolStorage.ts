@@ -47,6 +47,10 @@ export interface McpToolDefinition {
   readonly createdAt: string;
   updatedAt: string;
   inputSchema?: string;
+
+  // Local path to a script (e.g. a Python file) that turns this tool's raw
+  // response body into CSV. Run on demand from the Test dialog.
+  parserScriptPath?: string;
 }
 
 /** A parameter that the AI agent fills in when calling the tool */
@@ -288,6 +292,7 @@ export function createTool(
     createdAt: now,
     updatedAt: now,
     inputSchema: overrides.inputSchema,
+    parserScriptPath: overrides.parserScriptPath,
   };
 }
 

@@ -169,15 +169,84 @@ async function run(
       reqInfo += `\n────────────────────────────────────────────────────────────────\n\n`;
     }
 
-    setChildren(resultContainer,
+    const children: (HTMLElement | string)[] = [
       banner,
       h("pre", { class: "result-pre" }, `${reqInfo}RESPONSE:\nHeaders:\n${JSON.stringify(r.headers, null, 2)}\n\nBody:\n${r.body}`),
-    );
+    ];
+
+    if (!r.error && context.tool.parserScriptPath) {
+      children.push(buildParserSection(context, r.body));
+    }
+
+    setChildren(resultContainer, ...children);
   } catch (error) {
     setChildren(resultContainer, h("div", { class: "status-banner danger" }, `Error: ${messageOf(error)}`));
   } finally {
     (runBtn as HTMLButtonElement).disabled = false;
   }
+}
+
+function buildParserSection(
+  context: { serverId: string; tool: McpToolDefinition },
+  responseBody: string,
+): HTMLElement {
+  const parseBtn = h("sl-button", { size: "small", variant: "primary" }, icon("play", { slot: "prefix" }), "Parse Output");
+  const output = h("div", { class: "parser-output" });
+  const section = h("div", { class: "parser-section" },
+    h("div", { class: "parser-header" },
+      h("span", null, `Parser: ${context.tool.parserScriptPath}`),
+      parseBtn,
+    ),
+    output,
+  );
+
+  parseBtn.addEventListener("click", () => void runParser(context, responseBody, parseBtn, output));
+
+  return section;
+}
+
+async function runParser(
+  context: { serverId: string; tool: McpToolDefinition },
+  responseBody: string,
+  parseBtn: HTMLElement,
+  output: HTMLElement,
+): Promise<void> {
+  (parseBtn as HTMLButtonElement).disabled = true;
+  setChildren(output, h("div", { class: "status-banner" }, h("sl-spinner"), " Running parser script…"));
+
+  try {
+    const { output: csv, error } = await api.parseToolOutput(context.serverId, context.tool.id, responseBody);
+    if (error) {
+      setChildren(output,
+        h("div", { class: "status-banner danger" }, `Parser error: ${error}`),
+        csv ? h("pre", { class: "result-pre" }, csv) : null,
+      );
+      return;
+    }
+
+    const fileName = `${context.tool.name}.csv`;
+    const downloadBtn = h("sl-button", { size: "small" }, icon("download", { slot: "prefix" }), "Download CSV");
+    downloadBtn.addEventListener("click", () => downloadCsv(fileName, csv));
+
+    setChildren(output,
+      h("div", { class: "status-banner success" }, `Parsed. `, downloadBtn),
+      h("pre", { class: "result-pre" }, csv),
+    );
+  } catch (error) {
+    setChildren(output, h("div", { class: "status-banner danger" }, `Error: ${messageOf(error)}`));
+  } finally {
+    (parseBtn as HTMLButtonElement).disabled = false;
+  }
+}
+
+function downloadCsv(fileName: string, csv: string): void {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function messageOf(error: unknown): string {

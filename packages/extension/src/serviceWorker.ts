@@ -27,6 +27,7 @@ import {
   type McpSaveServerMessage,
   type McpSaveToolMessage,
   type McpTestToolMessage,
+  type McpParseToolOutputMessage,
   type OffscreenLogMessage,
   type PairingUpdatedMessage,
   type ToolRouterRequestMessage,
@@ -44,7 +45,7 @@ import {
   importConfig,
   findEnabledToolByName,
 } from "./mcpToolStorage.js";
-import { executeHttpTool } from "./httpProxy.js";
+import { executeHttpTool, runParserScript } from "./httpProxy.js";
 import { extractAllParameterNames } from "./symbolResolver.js";
 
 const OFFSCREEN_DOCUMENT_PATH = "offscreen.html";
@@ -230,6 +231,17 @@ const messageHandlers: Partial<Record<ExtensionRuntimeMessage["kind"], (message:
     }
   },
   "mcp/get-dynamic-tools": async () => await handleGetDynamicTools(),
+  "mcp/parse-tool-output": async (message: McpParseToolOutputMessage) => {
+    const tool = await getTool(message.serverId, message.toolId);
+    if (!tool) {
+      return { ok: false, error: "Tool not found" };
+    }
+    if (!tool.parserScriptPath) {
+      return { ok: false, error: "This tool has no parser script configured." };
+    }
+    const result = await runParserScript(tool.parserScriptPath, message.input);
+    return { ok: true, output: result.output, error: result.error };
+  },
 };
 
 chrome.runtime.onMessage.addListener(

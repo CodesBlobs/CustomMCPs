@@ -137,6 +137,13 @@ export interface McpGetDynamicToolsMessage {
   readonly kind: "mcp/get-dynamic-tools";
 }
 
+export interface McpParseToolOutputMessage {
+  readonly kind: "mcp/parse-tool-output";
+  readonly serverId: string;
+  readonly toolId: string;
+  readonly input: string;
+}
+
 // ─── Response types ───────────────────────────────────────────────────────────
 
 export interface McpListServersResponse {
@@ -189,6 +196,12 @@ export interface McpNativeHostStatusResponse {
   readonly error?: string;
 }
 
+export interface McpParseToolOutputResponse {
+  readonly ok: true;
+  readonly output: string;
+  readonly error?: string;
+}
+
 export interface McpErrorResponse {
   readonly ok: false;
   readonly error: string;
@@ -213,7 +226,8 @@ export type ExtensionRuntimeMessage =
   | McpExportConfigMessage
   | McpImportConfigMessage
   | McpGetNativeHostStatusMessage
-  | McpGetDynamicToolsMessage;
+  | McpGetDynamicToolsMessage
+  | McpParseToolOutputMessage;
 
 export type ToolRouterResponse =
   | ToolRouterSuccessResponse
